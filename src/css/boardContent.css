@@ -1,0 +1,15 @@
+.content_table {
+    border-spacing: 15px;
+    border-collapse: separate;
+}
+
+.content_img {
+    width: 100px;
+    height: 200px;
+    background-color: bisque;
+    margin: 20px;
+}
+
+.content_review_rating {
+    margin-bottom: 20px;
+}
