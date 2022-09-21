@@ -32,10 +32,13 @@
 
   // 플러그인을 통해 설치한 것 외에 규칙 설정
   "rules": {
-      "prettier/prettier": [
-          "error", {
-              "endOfLine": "auto"
-          }
-      ]
+    "no-console": "off",
+    "member-access": [true, "no-public"],
+    "jsx-no-lambda": false,
+    "prettier/prettier": [
+        "error", {
+            "endOfLine": "auto"
+        }
+    ]
   }
 }

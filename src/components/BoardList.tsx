@@ -53,8 +53,8 @@ class BoardContent extends Component {
     render() {
         return (
             <Table>
-                <tr className="content_img">
-                    <td>사진</td>
+                <tr>
+                    <td className="content_img">사진</td>
                 </tr>
                 <tr>
                     <td>로우앤슬로우</td>
