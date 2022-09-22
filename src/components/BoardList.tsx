@@ -1,4 +1,5 @@
 //import { render } from '@testing-library/react';
+import React from 'react';
 import { Component } from 'react';
 import '../css/boardContent.css';
 import Table from 'react-bootstrap/Table';
@@ -13,34 +14,37 @@ class BoardList extends Component {
     render() {
         return (
             <Table className="content_table">
-                <tr>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                    <td>
-                        <BoardContent />
-                    </td>
-                </tr>
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                        <td>
+                            <BoardContent />
+                        </td>
+                    </tr>
+                    </tbody>
             </Table>
         );
     }

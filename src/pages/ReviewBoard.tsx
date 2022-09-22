@@ -1,6 +1,7 @@
 import '../App.css';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import BoardList from 'components/BoardList';
+import BoardList from '../components/BoardList';
 
 function ReviewBoard() {
     return (
