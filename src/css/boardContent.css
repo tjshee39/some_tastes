@@ -1,3 +1,7 @@
+table, tr, td {
+    border: none;
+}
+
 .content_table {
     border-spacing: 15px;
     border-collapse: separate;
@@ -5,8 +9,8 @@
 
 .content_img {
     width: 100px;
-    height: 200px;
-    background-color: bisque;
+    height: 150px;
+    background-color: bisque !important;
     margin: 20px;
     border-top-left-radius: 15px; 
     border-top-right-radius: 15px;
@@ -14,6 +18,11 @@
     border-bottom-right-radius: 15px;
 }
 
+.restaurant {
+    font-family: 'gureumgothic50';
+}
+
 .content_review_rating {
     margin-bottom: 20px;
+    font-family: 'gureumgothic30';
 }

@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: "gureumgothic30";
+    src: url("../assets/fonts/gureumgothic30.TTF")
+}
+
+@font-face {
+    font-family: "gureumgothic50";
+    src: url("../assets/fonts/gureumgothic50.TTF")
+}

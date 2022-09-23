@@ -35,8 +35,9 @@ module.exports = {
             // 사용할 모듈이 2개 이상일때. css-loader -> style-loader 순으로 작동
             use: [{ loader: "style-loader" }, { loader: "css-loader" }],
           }, {
-            test: /\.png$/,
-            use: [{ loader: "file-loader"}]
+            test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+            exclude: /node_modules/,
+            use: ['file-loader?name=[name].[ext]']
           }
           
         ],
@@ -44,7 +45,10 @@ module.exports = {
       plugins: [
         new HtmlWebpackPlugin({
             template: "./public/index.html",
-        })
+            favicon: "./public/favicon.ico",
+            manifest: "./public/manifest.json",
+            PUBLIC_URL: "static"
+        }),      
       ],
       resolve: {
         extensions: [".js", ".jsx", ".ts", ".tsx"]

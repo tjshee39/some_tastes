@@ -5,7 +5,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 30vmin;
   pointer-events: none;
 }
 
@@ -19,11 +19,12 @@
   width: 100%;
 }
 
-.btn_review_board, .btn_board_create {
+.btn_board_create {
   font-size: 14px;
   border: none;
   float: left;
   margin: 5px;
+  font-family: 'gureumgothic';
 }
 
 @media (prefers-reduced-motion: no-preference) {
