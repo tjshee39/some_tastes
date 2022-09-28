@@ -19,11 +19,10 @@ const db = mysql.createPool({
   database: "sometaste",
 });
 
-app.get("/", (req, res) => {
-  //const sqlQuery = "INSERT INTO requested (rowno) VALUES (1)";
+app.get("/restaurantList", (req, res) => {
+  const sqlQuery = "SELECT restaurant, photo, rating FROM tbl_restaurants;";
   db.query(sqlQuery, (err, result) => {
-    console.log(err);
-    res.send("success");
+    res.send(result);
   });
 });
 

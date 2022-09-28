@@ -20,11 +20,12 @@
 }
 
 .btn_board_create {
-  font-size: 14px;
   border: none;
-  float: left;
-  margin: 5px;
-  font-family: 'gureumgothic';
+  position:fixed;
+  bottom: 20%;
+  right: 10%;
+  width: 70px;
+  height: 70px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

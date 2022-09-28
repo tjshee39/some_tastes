@@ -7,9 +7,13 @@ table, tr, td {
     border-collapse: separate;
 }
 
+.content {
+    width: 200px;
+}
+
 .content_img {
-    width: 100px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     background-color: bisque !important;
     margin: 20px;
     border-top-left-radius: 15px; 
@@ -18,7 +22,7 @@ table, tr, td {
     border-bottom-right-radius: 15px;
 }
 
-.restaurant {
+.content_restaurant {
     font-family: 'gureumgothic50';
 }
 

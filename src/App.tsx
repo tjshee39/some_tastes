@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
 import CreateBoard from './pages/CreateBoard';
-import ReviewBoard from './pages/ReviewBoard';
+import RestaurantList from './pages/RestaurantList';
 
 function App() {
     return (
@@ -18,7 +18,8 @@ function App() {
                     </div>
                 </div>
                 <Routes>
-                    <Route path="/" element={<ReviewBoard />} />
+                    <Route path="/" element={<RestaurantList />} />
+                    <Route path="/restaurantList" element={<RestaurantList />} />
                     <Route path="/createBoard" element={<CreateBoard />} />
                 </Routes>
             </BrowserRouter>
