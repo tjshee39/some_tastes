@@ -70,29 +70,17 @@ class RestaurantList extends Component {
                         </Link>
                     </div>
                 </div>
-                <div>
-                    <Table hover>
-                        <thead>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </thead>
-                        <tbody>
-                            <td>
-                                {restaurantList.map((v: any) => {
-                                    return (
-                                        <Restaurants
-                                            photo={v.photo}
-                                            restaurant={v.restaurant}
-                                            rating={v.rating}
-                                            key={v.restaurant}
-                                        />
-                                    );
-                                })}
-                            </td>
-                        </tbody>
-                    </Table>
+                <div className="container">
+                    {restaurantList.map((v: any) => {
+                        return (
+                            <Restaurants
+                                photo={v.photo}
+                                restaurant={v.restaurant}
+                                rating={v.rating}
+                                key={v.restaurant}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         );

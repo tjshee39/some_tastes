@@ -2,6 +2,13 @@ table, tr, td {
     border: none;
 }
 
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 200px 200px 200px 200px;
+    column-gap: 20px;
+}
+
 .content_table {
     border-spacing: 15px;
     border-collapse: separate;
