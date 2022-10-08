@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
-import CreateBoard from './pages/CreateBoard';
+import CreateRestaurant from './pages/CreateRestaurant';
 import RestaurantList from './pages/RestaurantList';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<RestaurantList />} />
                     <Route path="/restaurantList" element={<RestaurantList />} />
-                    <Route path="/createBoard" element={<CreateBoard />} />
+                    <Route path="/createRestaurant" element={<CreateRestaurant />} />
                 </Routes>
             </BrowserRouter>
         </>

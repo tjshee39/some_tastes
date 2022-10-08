@@ -13,6 +13,7 @@
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "bootstrap": "^5.2.1",
+    "concurrently": "^7.4.0",
     "cors": "^2.8.5",
     "css-loader": "^6.7.1",
     "express": "^4.18.1",
@@ -24,6 +25,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^4.5.1",
     "react-router": "^6.4.0",
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
@@ -38,8 +40,7 @@
     "start": "node ./src/index.tsx",
     "build": "webpack",
     "eject": "react-scripts eject",
-    "dev": "nodemon ./server/index.js",
-    "client": "webpack serve"
+    "dev": "concurrently \"nodemon ./server/index.js \" \"webpack serve\""
   },
   "eslintConfig": {
     "extends": [
