@@ -17,7 +17,9 @@ class RestaurantList extends Component {
             <>
                 <div className="content">
                     <tr>
-                        <td className="content_img">{photo}</td>
+                        <td>
+                            <img src={photo} className="content_img" />
+                        </td>
                     </tr>
                     <tr>
                         <td className="content_restaurant">{restaurant}</td>

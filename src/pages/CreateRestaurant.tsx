@@ -44,51 +44,6 @@ const fileExtensionValid = ({ name }: { name: string }): boolean => {
     return true;
 };
 
-const SelectImage = (props: any) => {
-    const [imageUrl, setImageUrl] = useState<any>(null);
-    const imageRef = useRef<any>(null);
-
-    const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const reader = new FileReader();
-        const file = imageRef.current.files[0];
-
-        // 파일 확장자 체크
-        if (!fileExtensionValid(file)) {
-            file.value = '';
-            alert(`이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`);
-            return;
-        }
-
-        // 파일 용량 체크
-        if (file.size > FILE_SIZE_MAX_LIMIT) {
-            file.value = '';
-            alert('업로드 가능한 최대 용량은 5MB 입니다.');
-            return;
-        }
-
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setImageUrl(reader.result);
-            console.log('이미지 주소', reader.result);
-        };
-    };
-
-    return (
-        <>
-            <img src={imageUrl ? imageUrl : defaultImage} className="select_img" />
-            <label htmlFor="photo">이미지 업로드</label>
-            <input
-                className="btn_img_upload"
-                type="file"
-                name="photo"
-                id="photo"
-                ref={imageRef}
-                onChange={onChangeImage}
-            />
-        </>
-    );
-};
-
 /**
  * CreateRestaurant Class
  */
@@ -97,28 +52,51 @@ class CreateRestaurant extends Component {
         isModifyMode: false,
         restaurant: '',
         address: '',
+        file: '',
+        fileName: '',
     };
 
     write = () => {
-        if (this.state.restaurant === '' || this.state.address === '') {
+        if (this.state.restaurant === '' || this.state.address === '' || this.state.file === '') {
             alert('모든 항목을 작성해주세요');
+            console.log('restaurant:', this.state.restaurant);
+            console.log('address:', this.state.address);
+            console.log('photo:', this.state.file);
+            console.log('fileName:', this.state.fileName);
+        } else {
+            const formData = new FormData();
+            formData.append('restaurant', this.state.restaurant);
+            formData.append('address', this.state.address);
+            formData.append('photo', this.state.file);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            };
+
+            Axios.post('http://localhost:8000/createRestaurant', formData, config)
+                .then((res) => {
+                    console.log(res);
+                    console.log('restaurant:', this.state.restaurant);
+                    console.log('address:', this.state.address);
+                    console.log('photo:', this.state.file);
+                    console.log('fileName:', this.state.fileName);
+                })
+                .catch((e) => {
+                    console.error(e);
+                    console.log('restaurant:', this.state.restaurant);
+                    console.log('address:', this.state.address);
+                    console.log('photo:', this.state.file);
+                    console.log('fileName:', this.state.fileName);
+                });
         }
-        Axios.post('http://localhost:8000/createRestaurant', {
-            restaurant: this.state.restaurant,
-            address: this.state.address,
-        })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((e) => {
-                console.error(e);
-            });
     };
 
     update = () => {
         Axios.post('http://localhost:8000/updateRestaurant', {
             restaurant: this.state.restaurant,
             address: this.state.address,
+            photo: this.state.file,
         })
             .then((res) => {
                 console.log(res);
@@ -134,6 +112,59 @@ class CreateRestaurant extends Component {
         });
     };
 
+    SelectImage = (props: any) => {
+        const [imageUrl, setImageUrl] = useState<any>(null);
+        const imageRef = useRef<any>(null);
+
+        const onChangeImage = (e: any) => {
+            const reader = new FileReader();
+            const file = imageRef.current.files[0];
+
+            // 파일 확장자 체크
+            if (!fileExtensionValid(file)) {
+                file.value = '';
+                alert(`이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`);
+                return;
+            }
+
+            // 파일 용량 체크
+            if (file.size > FILE_SIZE_MAX_LIMIT) {
+                file.value = '';
+                alert('업로드 가능한 최대 용량은 5MB 입니다.');
+                return;
+            }
+
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                setImageUrl(reader.result);
+                console.log('이미지 주소', reader.result);
+
+                this.setState({
+                    file: e.target.files[0],
+                    fileName: e.target.value,
+                });
+            };
+        };
+
+        return (
+            <>
+                <form className="form_photo" encType="multipart/form-data">
+                    <img src={imageUrl ? imageUrl : defaultImage} className="select_img" />
+                    <label htmlFor="file">이미지 업로드</label>
+                    <input
+                        className="btn_img_upload"
+                        type="file"
+                        name="file"
+                        id="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        ref={imageRef}
+                        onChange={onChangeImage}
+                    />
+                </form>
+            </>
+        );
+    };
+
     /**
      * @return { Component } Component
      */
@@ -143,7 +174,7 @@ class CreateRestaurant extends Component {
             <>
                 <div className="App">
                     <div className="area_upload_img">
-                        <SelectImage />
+                        <this.SelectImage />
                     </div>
                     <div className="area_restaurant">
                         <div>
