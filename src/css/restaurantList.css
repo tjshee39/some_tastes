@@ -4,17 +4,21 @@ table, tr, td {
 
 .area_btn {
     width: 100%;
-  }
+}
   
-  .btn_board_create {
+.btn_board_create {
     border: none;
     position:fixed;
     bottom: 20%;
     right: 7%;
     width: 70px;
     height: 70px;
-  }
-  
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
 
 .container {
     display: grid;

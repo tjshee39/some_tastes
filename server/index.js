@@ -30,12 +30,27 @@ app.listen(PORT, () => {
 
 // restaurantList::GET
 // 식당 목록 출력
-app.get("/restaurantList", (req, res) => {
-  const sqlQuery = "SELECT restaurant, photo, rating FROM tbl_restaurants ORDER BY bno DESC;";
+app.get("/restaurantList", async function(req, res) {
+  const sqlQuery = "SELECT * FROM tbl_restaurants ORDER BY bno DESC";
+
   db.query(sqlQuery, (err, result) => {
     res.send(result);
   });
 });
+
+// // restaurantDatail::GET
+// // 식당 정보 출력
+// app.get("/restaurantDetail/:bno", (req, res) => {
+//   console.log("?????????");
+//   const {bno} = req.params;
+//   console.log("bno:", bno);
+//   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
+//   db.query(sqlQuery, (err, result) => {
+//     console.log("===== restaurantDetail =====");
+//     console.log(result);
+//     res.send(result);
+//   });
+// });
 
 // createRestaurant::POST
 // 식당 정보 등록

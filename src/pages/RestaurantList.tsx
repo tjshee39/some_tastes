@@ -1,5 +1,5 @@
 import '../App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { Component } from 'react';
 import Axios from 'axios';
 import '../css/restaurantList.css';
@@ -12,22 +12,45 @@ import pencil from '../assets/images/pencil.png';
  */
 
 class RestaurantList extends Component {
-    Restaurants = ({ restaurant, photo, rating }: { restaurant: string; photo: string; rating: number }) => {
+    Restaurants = ({
+        bno,
+        restaurant,
+        address,
+        photo,
+        rating,
+    }: {
+        bno: number;
+        restaurant: string;
+        address: string;
+        photo: string;
+        rating: number;
+    }) => {
         return (
             <>
-                <div className="content">
-                    <tr>
-                        <td>
-                            <img src={photo} className="content_img" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="content_restaurant">{restaurant}</td>
-                    </tr>
-                    <tr>
-                        <td className="content_review_rating">★{rating}</td>
-                    </tr>
-                </div>
+                <Link
+                    to={`/restaurantDetail/${bno}`}
+                    state={{
+                        bno: bno,
+                        restaurant: restaurant,
+                        address: address,
+                        photo: photo,
+                        rating: rating,
+                    }}
+                >
+                    <div className="content">
+                        <tr>
+                            <td>
+                                <img src={photo} className="content_img" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="content_restaurant">{restaurant}</td>
+                        </tr>
+                        <tr>
+                            <td className="content_review_rating">★{rating}</td>
+                        </tr>
+                    </div>
+                </Link>
             </>
         );
     };
@@ -75,10 +98,12 @@ class RestaurantList extends Component {
                     {restaurantList.map((v: any) => {
                         return (
                             <this.Restaurants
-                                photo={v.photo}
+                                bno={v.bno}
                                 restaurant={v.restaurant}
+                                address={v.address}
+                                photo={v.photo}
                                 rating={v.rating}
-                                key={v.restaurant}
+                                key={v.bno}
                             />
                         );
                     })}

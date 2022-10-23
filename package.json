@@ -38,8 +38,8 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "start": "node ./src/index.tsx",
-    "build": "webpack",
+    "start": "nodemon ./server/index.js",
+    "build": "webpack serve",
     "eject": "react-scripts eject",
     "dev": "concurrently \"nodemon ./server/index.js \" \"webpack serve\""
   },

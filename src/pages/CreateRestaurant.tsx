@@ -81,6 +81,10 @@ class CreateRestaurant extends Component {
                     console.log('address:', this.state.address);
                     console.log('photo:', this.state.file);
                     console.log('fileName:', this.state.fileName);
+
+                    alert('음식점 등록 완료');
+
+                    location.href = 'http://localhost:3000/';
                 })
                 .catch((e) => {
                     console.error(e);

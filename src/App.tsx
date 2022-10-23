@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
 import CreateRestaurant from './pages/CreateRestaurant';
 import RestaurantList from './pages/RestaurantList';
+import RestaurantDetail from './pages/RestaurantDetail';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/" element={<RestaurantList />} />
                     <Route path="/restaurantList" element={<RestaurantList />} />
                     <Route path="/createRestaurant" element={<CreateRestaurant />} />
+                    <Route path="/restaurantDetail/:bno" element={<RestaurantDetail />} />
                 </Routes>
             </BrowserRouter>
         </>
