@@ -29,13 +29,13 @@ class RestaurantList extends Component {
             <>
                 <Link
                     to={`/restaurantDetail/${bno}`}
-                    state={{
-                        bno: bno,
-                        restaurant: restaurant,
-                        address: address,
-                        photo: photo,
-                        rating: rating,
-                    }}
+                    // state={{
+                    //     bno: bno,
+                    //     restaurant: restaurant,
+                    //     address: address,
+                    //     photo: photo,
+                    //     rating: rating,
+                    // }}
                 >
                     <div className="content">
                         <tr>

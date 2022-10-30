@@ -18,7 +18,6 @@ class RestaurantDetail extends Component {
                 <div className="App">
                     <DetailView />
                 </div>
-                ;
             </>
         );
     }

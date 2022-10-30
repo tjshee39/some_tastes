@@ -1,30 +1,69 @@
-.detail_restaurant {
-    font-size: 24px;
-    font-family: 'gureumgothic50';
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.detail_address {
-    font-size: large;
-    font-family: 'gureumgothic50';
-    font-weight: 500;
-}
-  
 .content {
     width: 100%;
 }
 
 .area_detail {
-    text-align: left;
+    margin-left: 100px;
+    /* margin-right: 30px; */
 }
 
-.detail_photo {
-    margin: 30px;
+.detail_photo, .area_text {
+    display: inline-block;
+}
+
+.area_text {
+    margin-left: 20px;
+    vertical-align: top;
 }
 
 .photo {
     width: 300px;
     height: 300px;
     border-radius: 15px;
+}
+
+.detail_restaurant {
+    font-size: 32px;
+    font-family: 'gureumgothic50';
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.detail_address {
+    font-size: 24px;
+    font-family: 'gureumgothic50';
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.area_detail_address {
+    display: flex;
+}
+
+.img_location {
+    width: 20px;
+    height: 20px;
+}
+
+.area_detail {
+    text-align: left;
+}
+
+.area_button {
+    font-family: 'gureumgothic50';
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.board_update {
+    width: 90px;
+    height: 60px;
+    background: #ffd02e;
+    border: none;
+    border-radius: 30px;
+}
+
+.board_update:hover {
+    box-shadow: 0 2px 4px #7a7a76;
+    background: #f8bd11;
 }

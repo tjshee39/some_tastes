@@ -76,38 +76,14 @@ class CreateRestaurant extends Component {
 
             Axios.post('http://localhost:8000/createRestaurant', formData, config)
                 .then((res) => {
-                    console.log(res);
-                    console.log('restaurant:', this.state.restaurant);
-                    console.log('address:', this.state.address);
-                    console.log('photo:', this.state.file);
-                    console.log('fileName:', this.state.fileName);
-
                     alert('음식점 등록 완료');
 
                     location.href = 'http://localhost:3000/';
                 })
                 .catch((e) => {
                     console.error(e);
-                    console.log('restaurant:', this.state.restaurant);
-                    console.log('address:', this.state.address);
-                    console.log('photo:', this.state.file);
-                    console.log('fileName:', this.state.fileName);
                 });
         }
-    };
-
-    update = () => {
-        Axios.post('http://localhost:8000/updateRestaurant', {
-            restaurant: this.state.restaurant,
-            address: this.state.address,
-            photo: this.state.file,
-        })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((e) => {
-                console.error(e);
-            });
     };
 
     handleChange = (e: any) => {
@@ -209,10 +185,7 @@ class CreateRestaurant extends Component {
                         </form>
                     </div>
                     <div className="area_btn">
-                        <button
-                            className="btn_restaurant_register"
-                            onClick={this.state.isModifyMode ? this.update : this.write}
-                        >
+                        <button className="btn_restaurant_register" onClick={this.write}>
                             등록
                         </button>
                     </div>

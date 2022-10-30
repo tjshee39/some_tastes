@@ -20,9 +20,14 @@
   background-color: #ffd02e;
   cursor: pointer;
   border: none;
-  border-radius: .25em;
+  border-radius: 1.25em;
   font-family: 'gureumgothic50';
   margin-top: 10px;
+}
+
+.area_upload_img label:hover {
+  box-shadow: 0 2px 4px #7a7a76;
+  background: #f8bd11;
 }
 
 .area_upload_img input[type="file"] {
@@ -41,10 +46,16 @@
     margin-bottom: 20px;
     border: none;
     font-family: 'gureumgothic50';
-    border-radius: 10px;
+    font-size: 20px;
+    border-radius: 30px;
     background: #ffd02e;
     width: 90px;
     height: 60px;
+}
+
+.btn_restaurant_register:hover {
+  box-shadow: 0 2px 4px #7a7a76;
+  background: #f8bd11;
 }
 
 .area_restaurant, .area_address{

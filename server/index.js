@@ -10,6 +10,7 @@ const app = express();
 const fs = require('fs');
 const multer = require('multer');
 const uploadImage = multer({dest: './uploadImage/'});
+app.use('/photo', express.static('./uploadImage'));
 
 const PORT = process.env.port || 8000;
 
@@ -38,23 +39,21 @@ app.get("/restaurantList", async function(req, res) {
   });
 });
 
-// // restaurantDatail::GET
-// // 식당 정보 출력
-// app.get("/restaurantDetail/:bno", (req, res) => {
-//   console.log("?????????");
-//   const {bno} = req.params;
-//   console.log("bno:", bno);
-//   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
-//   db.query(sqlQuery, (err, result) => {
-//     console.log("===== restaurantDetail =====");
-//     console.log(result);
-//     res.send(result);
-//   });
-// });
+// restaurantDatail::GET
+// 식당 정보 출력
+app.get("/restaurantDetail/:bno", (req, res) => {
+  const {bno} = req.params;
+  console.log("bno:", bno);
+  const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
+  db.query(sqlQuery, (err, result) => {
+    console.log("===== restaurantDetail =====");
+    console.log(result);
+    res.send(result);
+  });
+});
 
 // createRestaurant::POST
 // 식당 정보 등록
-app.use('/photo', express.static('./uploadImage'));
 app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
@@ -72,14 +71,29 @@ app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
 
 // updateRestaurant::POST
 // 식당 정보 수정
-app.post("/updateRestaurant", (req, res) => {
+app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
-  let photo = 'http://localhost:3000/photo/' + req.file.filename;
+  let photo;
+
+  console.log("restaurant", restaurant);
+  console.log("restaurant", address);
+
+  if (typeof(req.file) == 'undefined') {
+    photo = req.body.existingPhoto;
+  } else {
+      photo = 'http://localhost:8000/photo/' + req.file.filename;
+      console.log('filename', photo);
+  }
+
+  console.log("restaurant", photo);
 
   const sqlQuery =
     "UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
   db.query(sqlQuery, [restaurant, address, photo, restaurant], (err, result) => {
+    console.log("===== update restaurant =====");
+    console.log(result);
     res.send(result);
   });
+  
 });
