@@ -1,0 +1,39 @@
+.content {
+    width: 100%;
+}
+
+.area_review {
+    margin-top: 30px;
+}
+
+.info_restaurant {
+    font-family: 'gureumgothic50';
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.info_restaurant, .area_starRating {
+    display: inline-block;
+}
+
+.input_content {
+    margin-top: 20px;
+    width: 50%;
+    height: 120px;
+    border-radius: 5px;
+    outline: none;
+    line-height: 5rem;
+    border: 1px solid gray;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 1.2rem;
+    font-family: 'gureumgothic50';
+}
+
+/* rating */
+.rating {
+    display: none;
+  }
+.star {
+cursor: pointer;
+}

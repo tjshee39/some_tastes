@@ -6,9 +6,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import addressLocation from '../assets/images/location.png';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import CreateReview from '../components/CreateReview';
 
 /**
- * RestaurantDetail class
+ * DetailView
  */
 
 const DetailView = () => {
@@ -23,7 +24,7 @@ const DetailView = () => {
     useEffect(() => {
         Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
             .then((res) => {
-                console.log('getDetail', res.data);
+                // console.log('getDetail', res.data);
 
                 return res.data;
             })
@@ -35,6 +36,18 @@ const DetailView = () => {
                 });
             });
     }, []);
+
+    const deleteRestaurant = () => {
+        Axios.post(`http://localhost:8000/deleteRestaurant/${bno}`)
+            .then(() => {
+                alert('정상적으로 삭제되었습니다.');
+
+                location.href = `http://localhost:3000/`;
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
 
     return (
         <>
@@ -52,11 +65,17 @@ const DetailView = () => {
                             <div className="detail_address">{detail.address}</div>
                         </div>
                     </div>
-                    <Link to={`/updateRestaurant/${bno}`}>
-                        <div className="area_button">
+                    <div className="area_button">
+                        <Link to={`/updateRestaurant/${bno}`}>
                             <button className="board_update">수정</button>
-                        </div>
-                    </Link>
+                        </Link>
+                        <button className="board_delete" onClick={deleteRestaurant}>
+                            삭제
+                        </button>
+                    </div>
+                </div>
+                <div className="area_createReview">
+                    <CreateReview />
                 </div>
             </div>
         </>

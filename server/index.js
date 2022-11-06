@@ -32,7 +32,7 @@ app.listen(PORT, () => {
 // restaurantList::GET
 // 식당 목록 출력
 app.get("/restaurantList", async function(req, res) {
-  const sqlQuery = "SELECT * FROM tbl_restaurants ORDER BY bno DESC";
+  const sqlQuery = "SELECT * FROM tbl_restaurants WHERE available = 'Y' ORDER BY bno DESC";
 
   db.query(sqlQuery, (err, result) => {
     res.send(result);
@@ -43,11 +43,11 @@ app.get("/restaurantList", async function(req, res) {
 // 식당 정보 출력
 app.get("/restaurantDetail/:bno", (req, res) => {
   const {bno} = req.params;
-  console.log("bno:", bno);
+  // console.log("bno:", bno);
   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
   db.query(sqlQuery, (err, result) => {
-    console.log("===== restaurantDetail =====");
-    console.log(result);
+    // console.log("===== restaurantDetail =====");
+    // console.log(result);
     res.send(result);
   });
 });
@@ -57,9 +57,9 @@ app.get("/restaurantDetail/:bno", (req, res) => {
 app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
-  console.log("서버_restaurant", req.body.restaurant);
-  console.log("서버_address", req.body.address);
-  console.log("서버_file", req.file);
+  // console.log("서버_restaurant", req.body.restaurant);
+  // console.log("서버_address", req.body.address);
+  // console.log("서버_file", req.file);
 
   let photo = 'http://localhost:8000/photo/' +  req.file.filename;
 
@@ -76,24 +76,34 @@ app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
   let address = req.body.address;
   let photo;
 
-  console.log("restaurant", restaurant);
-  console.log("restaurant", address);
-
   if (typeof(req.file) == 'undefined') {
     photo = req.body.existingPhoto;
   } else {
       photo = 'http://localhost:8000/photo/' + req.file.filename;
-      console.log('filename', photo);
+      // console.log('filename', photo);
   }
 
-  console.log("restaurant", photo);
+  // console.log("restaurant", photo);
 
   const sqlQuery =
     "UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
   db.query(sqlQuery, [restaurant, address, photo, restaurant], (err, result) => {
-    console.log("===== update restaurant =====");
-    console.log(result);
+    // console.log("===== update restaurant =====");
+    // console.log(result);
     res.send(result);
   });
   
 });
+
+// deleteRestaurant::POST
+// 식당 삭제
+app.post("/deleteRestaurant/:bno", (req, res) => {
+  const {bno} = req.params;
+
+  const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
+
+  db.query(sqlQuery, (err, result) => {
+    // console.log("==== delete restaurant ====");
+    res.send(result);
+  })
+})

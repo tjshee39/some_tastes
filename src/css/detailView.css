@@ -63,6 +63,15 @@
     border-radius: 30px;
 }
 
+.board_delete {
+    width: 90px;
+    height: 60px;
+    background: #ffd02e;
+    border: none;
+    border-radius: 30px;
+    margin-left: 10px;
+}
+
 .board_update:hover {
     box-shadow: 0 2px 4px #7a7a76;
     background: #f8bd11;
