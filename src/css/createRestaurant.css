@@ -2,13 +2,20 @@
   margin-bottom: 20px;
 }
 
+
 .form_photo {
   display: inline-grid;
 }
 
 .select_img {
   width: 400px;
+  height: 400px;
+  /* min-width: 100px; */
+  /* min-height: 100px; */
+  /* -ms-interpolation-mode: bicubic; */
+  object-fit: cover;
   border-radius: 10px;
+   /* display: block; */
 }
 
 .area_upload_img label {

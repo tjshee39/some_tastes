@@ -1,5 +1,5 @@
 import '../App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaStar } from 'react-icons/fa';
 import '../css/createReview.css';
@@ -10,7 +10,9 @@ const StarRating = (props: any) => {
     const [hover, setHover] = useState<any>(null);
 
     // CreateReview로 rating 전송
-    props.getRating(rating);
+    useEffect(() => {
+        props.getRating(rating);
+    }, [rating]);
 
     const onChangeHandler = (e: any) => {};
 

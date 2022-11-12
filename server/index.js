@@ -41,7 +41,7 @@ app.get("/restaurantList", async function(req, res) {
 
 // restaurantDatail::GET
 // 식당 정보 출력
-app.get("/restaurantDetail/:bno", (req, res) => {
+app.get("/restaurantDetail/:bno", async function(req, res) {
   const {bno} = req.params;
   // console.log("bno:", bno);
   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
@@ -106,4 +106,19 @@ app.post("/deleteRestaurant/:bno", (req, res) => {
     // console.log("==== delete restaurant ====");
     res.send(result);
   })
+});
+
+// createReview::POST
+// 리뷰 등록
+app.post("/createReview", async (req, res) => {
+  let data = [
+    restaurant = req.body.restaurant,
+    content = req.body.content,
+    rating = req.body.rating
+  ];
+
+  const sqlQuery = "INSERT INTO tbl_reviews (restaurant, review, rating) VALUES (?, ?, ?);"
+  db.query(sqlQuery, data, (err, result) => {
+    res.send(result);
+  });
 })
