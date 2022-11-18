@@ -48,7 +48,7 @@ a {
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px; 
     border-bottom-right-radius: 15px;
-    overflow: hidden;
+    object-fit: cover;
     transition: 0.3s;
 }
 

@@ -99,6 +99,9 @@ app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
 // 식당 삭제
 app.post("/deleteRestaurant/:bno", (req, res) => {
   const {bno} = req.params;
+  let rating = 0;
+  let progress1 = false;
+  let progress2 = false;
 
   const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
 
@@ -119,6 +122,33 @@ app.post("/createReview", async (req, res) => {
 
   const sqlQuery = "INSERT INTO tbl_reviews (restaurant, review, rating) VALUES (?, ?, ?);"
   db.query(sqlQuery, data, (err, result) => {
-    res.send(result);
+    if (err) {
+      console.log("ERROR::", err);
+    } else {
+      console.log(result);
+      getAvgRating();
+    }
   });
-})
+
+  async function getAvgRating() {
+    let sqlQuery2 = `SELECT ROUND(AVG(rating), 1) as rating FROM tbl_reviews WHERE restaurant='${data[0]}'`
+    await db.query(sqlQuery2, (err, result) => {
+      if (err) {
+        console.log("ERROR::", err);
+      } else {
+        setAvgRating(result[0].rating);
+      }
+    });
+  }
+
+  function setAvgRating(rating) {
+    let sqlQuery3 = `UPDATE tbl_restaurants SET rating = ${rating} WHERE restaurant = '${data[0]}'`;
+    db.query(sqlQuery3, (err, result) => {
+      if (err) {
+        console.log("ERROR::", err);
+      } else {
+        res.send(result);
+      }
+    });
+  }
+});
