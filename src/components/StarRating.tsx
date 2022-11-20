@@ -33,12 +33,12 @@ const StarRating = (props: any) => {
                                     onClick={() => setRating(ratingValue)}
                                 />
                                 <FaStar
+                                    key={rating}
                                     className="star"
                                     color={ratingValue <= (hover || rating) ? '#f8bd11' : '#e4e5e9'}
                                     size={40}
                                     onMouseEnter={() => setHover(ratingValue)}
                                     onMouseLeave={() => setHover(null)}
-                                    key={rating}
                                 />
                             </label>
                         );

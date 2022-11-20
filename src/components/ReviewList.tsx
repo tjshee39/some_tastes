@@ -5,92 +5,56 @@ import '../css/createReview.css';
 import '../css/fonts.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'react-router-dom';
-import StarRating from './StarRating';
+import { stringify } from 'querystring';
 
-const CreateReview = () => {
-    const [restaurant, setRestaurant] = useState('');
-    const [rating, setRating] = useState('');
-    const [content, setContent] = useState('');
+const ReviewList = ({ bno }: any) => {
+    const [reviewDetail, setReviewDetail] = useState({
+        rating: 0,
+        review: '',
+        regdate: '',
+    });
 
-    const { bno } = useParams();
-
-    const getRating = (rating: React.SetStateAction<any>) => {
-        setRating(rating);
-
-        console.log('별점:', rating);
+    let state = {
+        reviewList: [],
     };
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
+        Axios.get(`http://localhost:8000/reviewList/${bno}`)
             .then((res) => {
-                // console.log('getDetail', res.data);
+                console.log('getDetail', res.data);
 
-                return res.data[0].restaurant;
+                return res.data;
             })
             .then((data) => {
-                setRestaurant(data);
+                state = {
+                    reviewList: data,
+                };
+
+                console.log(state);
             });
     }, []);
 
-    const handleChange = (e: any) => {
-        setContent(e.target.value);
+    let Reviews = ({ rating, content, regdate }: { rating: number; content: string; regdate: string }) => {
+        return (
+            <>
+                <div className="area_review">
+                    <div className="area_rating">111{rating}</div>
+                    <div className="area_content">222{content}</div>
+                    <div className="area_regdate">333{regdate}</div>
+                </div>
+            </>
+        );
     };
 
-    const write = async () => {
-        if (rating == null) {
-            alert('점수를 선택하지 않으셨어요!');
-        } else if (content == '') {
-            alert('리뷰 내용을 작성해주세요');
-        } else {
-            let data = {
-                restaurant: '',
-                content: '',
-                rating: 0,
-            };
-
-            data.restaurant = restaurant;
-            data.content = content;
-            data.rating = parseInt(rating);
-
-            console.log('dd:', data);
-
-            await Axios.post('http://localhost:8000/createReview', data)
-                .then((res) => {
-                    console.log(res);
-                    alert('리뷰 등록 완료');
-                })
-                .catch((e) => {
-                    console.error(e);
-                });
-        }
-    };
+    const { reviewList }: { reviewList: any } = state;
 
     return (
         <>
-            <div className="content">
-                <div className="area_re view">
-                    <span className="info_restaurant">🍴{restaurant}🍴</span>
-                    <div className="area_starRating">
-                        <StarRating key={bno} value={rating} getRating={getRating} />
-                    </div>
-                    <form className="form_content">
-                        <input
-                            className="input_content"
-                            type="text"
-                            name="content"
-                            onChange={handleChange}
-                            placeholder="리뷰 내용을 작성하세요✍"
-                        />
-                    </form>
-                    <div className="area_btn">
-                        <button className="btn_review_register" onClick={write}>
-                            리뷰작성
-                        </button>
-                    </div>
-                </div>
-            </div>
+            {reviewList.map((v: any) => {
+                return <Reviews rating={v.rating} content={v.content} regdate={v.regdate} key={v.rating} />;
+            })}
         </>
     );
 };
 
-export default CreateReview;
+export default ReviewList;

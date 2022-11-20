@@ -99,9 +99,6 @@ app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
 // 식당 삭제
 app.post("/deleteRestaurant/:bno", (req, res) => {
   const {bno} = req.params;
-  let rating = 0;
-  let progress1 = false;
-  let progress2 = false;
 
   const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
 
@@ -115,34 +112,39 @@ app.post("/deleteRestaurant/:bno", (req, res) => {
 // 리뷰 등록
 app.post("/createReview", async (req, res) => {
   let data = [
+    bno = req.body.bno,
     restaurant = req.body.restaurant,
     content = req.body.content,
     rating = req.body.rating
   ];
 
-  const sqlQuery = "INSERT INTO tbl_reviews (restaurant, review, rating) VALUES (?, ?, ?);"
+  // 등록
+  const sqlQuery = "INSERT INTO tbl_reviews (bno, restaurant, review, rating) VALUES (?, ?, ?, ?);"
   db.query(sqlQuery, data, (err, result) => {
     if (err) {
       console.log("ERROR::", err);
     } else {
-      console.log(result);
+      // 등록 완료 -> 별점 구하는 함수 호출
       getAvgRating();
     }
   });
 
+  // 별점 평균 구하기
   async function getAvgRating() {
-    let sqlQuery2 = `SELECT ROUND(AVG(rating), 1) as rating FROM tbl_reviews WHERE restaurant='${data[0]}'`
+    let sqlQuery2 = `SELECT ROUND(AVG(rating), 1) as rating FROM tbl_reviews WHERE bno='${data[0]}'`
     await db.query(sqlQuery2, (err, result) => {
       if (err) {
         console.log("ERROR::", err);
       } else {
+        // 별점 평균 구하면 -> 해당 식당 별점 수정하는 함수 호출
         setAvgRating(result[0].rating);
       }
     });
   }
 
+  // 해당 식당 별점 -> 별점평균으로 수정
   function setAvgRating(rating) {
-    let sqlQuery3 = `UPDATE tbl_restaurants SET rating = ${rating} WHERE restaurant = '${data[0]}'`;
+    let sqlQuery3 = `UPDATE tbl_restaurants SET rating = ${rating} WHERE bno='${data[0]}'`;
     db.query(sqlQuery3, (err, result) => {
       if (err) {
         console.log("ERROR::", err);
@@ -151,4 +153,20 @@ app.post("/createReview", async (req, res) => {
       }
     });
   }
+});
+
+// reviewList::GET
+// 리뷰 목록 출력
+app.get("/reviewList/:bno", async function(req, res) {
+  const {bno} = req.params;
+
+  const sqlQuery = `SELECT * FROM tbl_reviews WHERE bno=${bno} AND available='Y'`;
+
+  db.query(sqlQuery, (err, result) => {
+    for (var i in result) {
+      result[i].regdate = result[i].regdate.toISOString().slice(0, 10);
+    }
+    
+    res.send(result);
+  });
 });

@@ -27,16 +27,7 @@ class RestaurantList extends Component {
     }) => {
         return (
             <>
-                <Link
-                    to={`/restaurantDetail/${bno}`}
-                    // state={{
-                    //     bno: bno,
-                    //     restaurant: restaurant,
-                    //     address: address,
-                    //     photo: photo,
-                    //     rating: rating,
-                    // }}
-                >
+                <Link to={`/restaurantDetail/${bno}`}>
                     <div className="content">
                         <tr>
                             <td>

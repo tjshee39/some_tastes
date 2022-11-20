@@ -4,20 +4,15 @@ import Axios from 'axios';
 import '../css/createReview.css';
 import '../css/fonts.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useParams } from 'react-router-dom';
 import StarRating from './StarRating';
 
-const CreateReview = () => {
+const CreateReview = ({ bno }: any) => {
     const [restaurant, setRestaurant] = useState('');
     const [rating, setRating] = useState('');
     const [content, setContent] = useState('');
 
-    const { bno } = useParams();
-
     const getRating = (rating: React.SetStateAction<any>) => {
         setRating(rating);
-
-        console.log('별점:', rating);
     };
 
     useEffect(() => {
@@ -37,12 +32,13 @@ const CreateReview = () => {
     };
 
     const write = async () => {
-        if (rating == null) {
+        if (rating == null || rating == '') {
             alert('점수를 선택하지 않으셨어요!');
         } else if (content == '') {
             alert('리뷰 내용을 작성해주세요');
         } else {
             let data = {
+                bno: bno,
                 restaurant: '',
                 content: '',
                 rating: 0,
@@ -52,12 +48,12 @@ const CreateReview = () => {
             data.content = content;
             data.rating = parseInt(rating);
 
-            console.log('dd:', data);
-
             await Axios.post('http://localhost:8000/createReview', data)
                 .then((res) => {
                     console.log(res);
                     alert('리뷰 등록 완료');
+                    setContent('');
+                    setRating('');
                 })
                 .catch((e) => {
                     console.error(e);

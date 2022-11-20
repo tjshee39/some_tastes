@@ -7,6 +7,7 @@ import addressLocation from '../assets/images/location.png';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CreateReview from '../components/CreateReview';
+import RivewList from './ReviewList';
 
 /**
  * DetailView
@@ -75,7 +76,10 @@ const DetailView = () => {
                     </div>
                 </div>
                 <div className="area_createReview">
-                    <CreateReview />
+                    <CreateReview key={bno} bno={bno} />
+                </div>
+                <div className="area_reviews">
+                    <RivewList key={bno} bno={bno} />
                 </div>
             </div>
         </>
