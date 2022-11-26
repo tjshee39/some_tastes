@@ -81,7 +81,7 @@ class RestaurantList extends Component {
                 <div className="area_btn">
                     <div className="board_create">
                         <Link to="/createRestaurant">
-                            <img src={pencil} title="음식점등록" className="btn_board_create" />
+                            <img src={pencil} className="btn_board_create" title="음식점 등록" />
                         </Link>
                     </div>
                 </div>

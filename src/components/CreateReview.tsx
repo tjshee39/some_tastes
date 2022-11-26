@@ -64,7 +64,7 @@ const CreateReview = ({ bno }: any) => {
     return (
         <>
             <div className="content">
-                <div className="area_re view">
+                <div className="area_create_review">
                     <span className="info_restaurant">🍴{restaurant}🍴</span>
                     <div className="area_starRating">
                         <StarRating key={bno} value={rating} getRating={getRating} />

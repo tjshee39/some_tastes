@@ -2,7 +2,7 @@
     width: 100%;
 }
 
-.area_review {
+.area_create_review {
     margin-top: 30px;
 }
 
@@ -20,7 +20,7 @@
     margin-top: 20px;
     width: 50%;
     height: 120px;
-    border-radius: 5px;
+    border-radius: 10px;
     outline: none;
     line-height: 5rem;
     border: 1px solid gray;

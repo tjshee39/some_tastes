@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaStar } from 'react-icons/fa';
 import '../css/createReview.css';
-import { prototype } from 'stream';
 
 const StarRating = (props: any) => {
     const [rating, setRating] = useState<any>(null);

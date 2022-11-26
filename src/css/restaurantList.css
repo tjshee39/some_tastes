@@ -5,12 +5,16 @@ table, tr, td {
 .area_btn {
     width: 100%;
 }
+
+.board_create {
+    display: inline-block;
+}
   
 .btn_board_create {
     border: none;
     position:fixed;
     bottom: 20%;
-    right: 7%;
+    right: 8%;
     width: 70px;
     height: 70px;
 }
@@ -42,7 +46,7 @@ a {
 .content_img {
     width: 200px;
     height: 200px;
-    background-color: bisque !important;
+    background-color: #ffd02e !important;
     margin: 20px;
     border-top-left-radius: 15px; 
     border-top-right-radius: 15px;

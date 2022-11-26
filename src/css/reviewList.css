@@ -1,0 +1,43 @@
+.content {
+    width: 100%;
+}
+
+.review_container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+}
+
+.area_review {
+    /* width: 400px; */
+    font-size: 18px;
+    font-family: 'gureumgothic50';  
+    border: gray solid 1px;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 30px
+}
+
+#rating {
+    color: #ffd02e;;   
+}
+
+.area_rating {
+    margin-bottom: 10px;
+}
+
+.area_regdate {
+    margin-left: 20px;
+    color: #808080
+}
+
+.area_rating, .area_regdate {
+    display: inline-block;
+}
+
+.area_content {
+    background-color: #e4e5e9;
+    border-radius: 10px;
+    padding: 10px;
+}
