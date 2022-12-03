@@ -8,13 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ReviewChart = ({ bno }: any) => {
     let [series, setSeries] = useState({ name: '★', data: [0, 0, 0, 0, 0] });
-    let ratingCount;
-    // let series = [
-    //     {
-    //         name: '★',
-    //         data: [1, 2, 3, 4, 5],
-    //     },
-    // ];
 
     const options: ApexOptions = {
         fill: {
@@ -23,6 +16,9 @@ const ReviewChart = ({ bno }: any) => {
         chart: {
             height: '400px',
             type: 'bar',
+            toolbar: {
+                show: false,
+            },
         },
         plotOptions: {
             bar: {
