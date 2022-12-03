@@ -54,6 +54,8 @@ const CreateReview = ({ bno }: any) => {
                     alert('리뷰 등록 완료');
                     setContent('');
                     setRating('');
+
+                    location.href = `http://localhost:3000/restaurantDetail/${bno}`;
                 })
                 .catch((e) => {
                     console.error(e);

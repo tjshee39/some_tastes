@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CreateReview from '../components/CreateReview';
 import RivewList from './ReviewList';
+import ReviewChart from './ReviewChart';
 
 /**
  * DetailView
@@ -77,6 +78,9 @@ const DetailView = () => {
                 </div>
                 <div className="area_createReview">
                     <CreateReview key={bno} bno={bno} />
+                </div>
+                <div className="area_reviewChart">
+                    <ReviewChart key={bno} bno={bno} />
                 </div>
                 <div className="area_reviews">
                     <RivewList key={bno} bno={bno} />

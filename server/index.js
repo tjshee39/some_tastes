@@ -170,3 +170,37 @@ app.get("/reviewList/:bno", async function(req, res) {
     res.send(result);
   });
 });
+
+// reviewChart::GET
+// 리뷰 별점 차트
+app.get("/reviewChart/:bno", async function(req, res) {
+  const {bno} = req.params;
+  const keys = ['rating', 'count'];
+  let ratingCount = [{}, {}, {}, {}, {}];
+  for (var i=0; i<5; i++) {
+    ratingCount[i][keys[0]] = i+1;
+    ratingCount[i][keys[1]] = 0;
+  }
+
+  let count = [];
+
+  const sqlQuery = `SELECT rating, COUNT(*) as count FROM tbl_reviews WHERE bno=${bno} GROUP BY rating ORDER BY rating ASC`;
+
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.error(err);
+    } else {
+
+      for (i in result) {
+        let rating = result[i].rating;
+        ratingCount[rating-1][keys[1]] = result[i].count;
+      }
+
+      for (i in ratingCount) {
+        count.push(ratingCount[i].count);
+      }
+
+      res.send(count);
+    };
+  })
+});

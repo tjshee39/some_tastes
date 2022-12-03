@@ -77,3 +77,12 @@
     box-shadow: 0 2px 4px #7a7a76;
     background: #f8bd11;
 }
+
+.area_createReview {
+    margin-bottom: 50px;
+}
+
+.area_reviewChart {
+    margin-bottom: 80px;
+    height: 400px;
+}
