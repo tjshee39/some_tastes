@@ -160,7 +160,7 @@ app.post("/createReview", async (req, res) => {
 app.get("/reviewList/:bno", async function(req, res) {
   const {bno} = req.params;
 
-  const sqlQuery = `SELECT * FROM tbl_reviews WHERE bno=${bno} AND available='Y'`;
+  const sqlQuery = `SELECT * FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY regdate desc`;
 
   db.query(sqlQuery, (err, result) => {
     for (var i in result) {
