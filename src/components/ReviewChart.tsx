@@ -12,6 +12,7 @@ const ReviewChart = ({ bno }: any) => {
     const options: ApexOptions = {
         fill: {
             colors: ['#ffd02e'],
+            opacity: 1,
         },
         chart: {
             height: '400px',
@@ -44,18 +45,18 @@ const ReviewChart = ({ bno }: any) => {
             axisBorder: {
                 show: false,
             },
-            crosshairs: {
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        colorFrom: '#ffd02e',
-                        colorTo: '#BED1E6',
-                        stops: [0, 100],
-                        opacityFrom: 0.4,
-                        opacityTo: 0.5,
-                    },
-                },
-            },
+            // crosshairs: {
+            //     fill: {
+            //         type: 'gradient',
+            //         gradient: {
+            //             colorFrom: '#ffd02e',
+            //             colorTo: '#BED1E6',
+            //             stops: [0, 100],
+            //             opacityFrom: 1,
+            //             opacityTo: 1,
+            //         },
+            //     },
+            // },
             tooltip: {
                 enabled: true,
             },
