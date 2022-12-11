@@ -1,5 +1,5 @@
 import '../App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, KeyboardEvent } from 'react';
 import Axios from 'axios';
 import '../css/createReview.css';
 import '../css/fonts.css';
@@ -10,6 +10,7 @@ const CreateReview = ({ bno }: any) => {
     const [restaurant, setRestaurant] = useState('');
     const [rating, setRating] = useState('');
     const [content, setContent] = useState('');
+    let reload = true;
 
     const getRating = (rating: React.SetStateAction<any>) => {
         setRating(rating);
@@ -31,8 +32,21 @@ const CreateReview = ({ bno }: any) => {
         setContent(e.target.value);
     };
 
+    const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log('onKeyPress', reload);
+        if (e.code === 'Enter') {
+            write();
+        }
+
+        if (reload == false) {
+            e.preventDefault();
+        }
+    };
+
     const write = async () => {
         if (rating == null || rating == '') {
+            reload = false;
+            onKeyPress;
             alert('점수를 선택하지 않으셨어요!');
         } else if (content == '') {
             alert('리뷰 내용을 작성해주세요');
@@ -50,12 +64,15 @@ const CreateReview = ({ bno }: any) => {
 
             await Axios.post('http://localhost:8000/createReview', data)
                 .then((res) => {
-                    console.log(res);
+                    return res;
+                })
+                .then((data) => {
                     alert('리뷰 등록 완료');
                     setContent('');
                     setRating('');
 
                     location.href = `http://localhost:3000/restaurantDetail/${bno}`;
+                    return;
                 })
                 .catch((e) => {
                     console.error(e);
@@ -78,6 +95,7 @@ const CreateReview = ({ bno }: any) => {
                             name="content"
                             onChange={handleChange}
                             placeholder="리뷰 내용을 작성하세요✍"
+                            onKeyDown={onKeyPress}
                         />
                     </form>
                     <div className="area_btn">
