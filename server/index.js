@@ -162,9 +162,10 @@ app.get("/reviewList/:bno", async function(req, res) {
   const {bno} = req.params;
 
   const sqlQuery = `SELECT rno, restaurant, bno, rating, review, DATE_FORMAT(regdate, "%Y-%m-%d") as regdate
-                     FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY regdate desc`;
+                     FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY rno desc`;
 
   db.query(sqlQuery, (err, result) => {
+    console.log(result)
     res.send(result);
   });
 });
