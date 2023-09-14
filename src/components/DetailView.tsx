@@ -68,7 +68,7 @@ const DetailView = () => {
                         </div>
                     </div>
                     <div className="area_button">
-                        <Link to={`/updateRestaurant/${bno}`}>
+                        <Link to={`/postRestaurant/${bno}`}>
                             <button className="board_update">수정</button>
                         </Link>
                         <button className="board_delete" onClick={deleteRestaurant}>

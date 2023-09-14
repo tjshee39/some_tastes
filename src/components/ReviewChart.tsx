@@ -40,7 +40,7 @@ const ReviewChart = ({ bno }: any) => {
             },
         },
         xaxis: {
-            categories: ['★1', '★2', '★3', '★4', '★5'],
+            categories: ['⭐1', '⭐2', '⭐3', '⭐4', '⭐5'],
             position: 'bottom',
             axisBorder: {
                 show: false,
@@ -98,7 +98,7 @@ const ReviewChart = ({ bno }: any) => {
                 return res.data;
             })
             .then(async (data) => {
-                setSeries({ name: '★', data: data });
+                setSeries({ name: '인원', data: data });
             });
     }, []);
 
@@ -107,7 +107,7 @@ const ReviewChart = ({ bno }: any) => {
             <div className="area_reviewChart">
                 <ApexCharts
                     options={options}
-                    series={[{ name: '★', data: series.data }]}
+                    series={[{ name: '인원', data: series.data }]}
                     type="bar"
                     height={400}
                 ></ApexCharts>

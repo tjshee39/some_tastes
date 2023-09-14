@@ -3,7 +3,7 @@ import '../css/fonts.css';
 import React from 'react';
 import { Component, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../css/createRestaurant.css';
+import '../css/postRestaurant.css';
 import restaurant from '../assets/images/restaurant.png';
 import address from '../assets/images/location.png';
 import Axios from 'axios';

@@ -1,5 +1,6 @@
 import '../App.css';
 import '../css/fonts.css';
+import $ from 'jquery';
 import React from 'react';
 import { Component, useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,6 +9,7 @@ import restaurant from '../assets/images/restaurant.png';
 import address from '../assets/images/location.png';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
+import defaultImage from '../assets/images/default_image.png';
 
 // 허용가능한 확장자 목록
 const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png';
@@ -42,14 +44,15 @@ const fileExtensionValid = ({ name }: { name: string }): boolean => {
     return true;
 };
 
-const UpdateRestaurant = () => {
+const PostRestaurant = () => {
+    const status = useParams().status;
+
     const [detail, setDetail] = useState({
         restaurant: '',
-        photo: '',
+        photo: defaultImage,
+        address: '',
         // fileName: '',
     });
-
-    const [detailAddress, setAddress] = useState('');
 
     const [fileInfo, setFile] = useState({
         file: '',
@@ -59,30 +62,42 @@ const UpdateRestaurant = () => {
     const [imageUrl, setImageUrl] = useState<any>(null);
     const imageRef = useRef<any>(null);
 
-    const { bno } = useParams();
-
     useEffect(() => {
-        Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
-            .then((res) => {
-                console.log('getDetail', res.data);
+        if (status != 'create') {
+            Axios.get(`http://localhost:8000/restaurantDetail/${status}`)
+                .then((res) => {
+                    console.log('getDetail', res.data);
 
-                return res.data;
-            })
-            .then((data) => {
-                setDetail({
-                    restaurant: data[0].restaurant,
-                    photo: data[0].photo,
+                    return res.data[0];
+                })
+                .then((data) => {
+                    setDetail({
+                        restaurant: data.restaurant,
+                        photo: data.photo,
+                        address: data.address,
+                    });
+
+                    $('#input_restaurant').val(data.restaurant);
+                    $('#input_restaurant').attr('readonly', 'true');
+                    $('#input_address').attr('placeholder', data.address);
+                    $('#btn_post').text('수정');
                 });
-
-                setAddress(data[0].address);
-            });
+        }
     }, []);
 
     const handleChange = (e: any) => {
-        setAddress(e.target.value);
+        const { value, name } = e.target;
+
+        setDetail({
+            ...detail,
+            [name]: value,
+        });
     };
 
     const SelectImage = (props: any) => {
+        // const [imageUrl, setImageUrl] = useState<any>(null);
+        // const imageRef = useRef<any>(null);
+
         const onChangeImage = (e: any) => {
             const reader = new FileReader();
             const file = imageRef.current.files[0];
@@ -92,6 +107,7 @@ const UpdateRestaurant = () => {
             if (!fileExtensionValid(file)) {
                 file.value = '';
                 alert(`이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`);
+
                 return;
             }
 
@@ -99,6 +115,7 @@ const UpdateRestaurant = () => {
             if (file.size > FILE_SIZE_MAX_LIMIT) {
                 file.value = '';
                 alert('업로드 가능한 최대 용량은 5MB 입니다.');
+
                 return;
             }
 
@@ -109,6 +126,11 @@ const UpdateRestaurant = () => {
                 setFile({
                     file: e.target.files[0],
                     fileName: e.target.value,
+                });
+
+                setDetail({
+                    ...detail,
+                    photo: e.target.value,
                 });
             };
         };
@@ -132,13 +154,33 @@ const UpdateRestaurant = () => {
         );
     };
 
-    const update = () => {
-        if (detail.restaurant === '' || detailAddress === '') {
-            alert('모든 항목을 작성해주세요');
-        } else {
+    const validCheck = (restaurant: string, address: string, photo: string) => {
+        if (restaurant === '') {
+            alert('식당명을 입력해주세요.');
+
+            return false;
+        }
+
+        if (address === '') {
+            alert('식당 위치를 입력해주세요.');
+
+            return false;
+        }
+
+        if (photo === '/default_image.png') {
+            alert('식당 이미지를 등록해주세요.');
+
+            return false;
+        }
+
+        return true;
+    };
+
+    const post = () => {
+        if (validCheck(detail.restaurant, detail.address, detail.photo)) {
             const formData = new FormData();
             formData.append('restaurant', detail.restaurant);
-            formData.append('address', detailAddress);
+            formData.append('address', detail.address);
             formData.append('photo', fileInfo.file);
             formData.append('existingPhoto', detail.photo);
             const config = {
@@ -147,19 +189,31 @@ const UpdateRestaurant = () => {
                 },
             };
 
-            Axios.post(`http://localhost:8000/updateRestaurant/${bno}`, formData, config)
-                .then((res) => {
-                    alert('음식점 수정 완료');
+            if (status == 'create') {
+                Axios.post('http://localhost:8000/createRestaurant', formData, config)
+                    .then((res) => {
+                        alert('음식점 등록 완료');
 
-                    location.href = `http://localhost:3000/restaurantDetail/${bno}`;
-                })
-                .catch((e) => {
-                    console.log('restaurant:', detail.restaurant);
-                    console.log('address:', detailAddress);
-                    console.log('photo:', detail.photo);
-                    console.log('file', fileInfo.file);
-                    console.error(e);
-                });
+                        location.href = 'http://localhost:3000/';
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
+            } else {
+                Axios.post(`http://localhost:8000/updateRestaurant/${status}`, formData, config)
+                    .then((res) => {
+                        alert('음식점 수정 완료');
+
+                        location.href = `http://localhost:3000/restaurantDetail/${status}`;
+                    })
+                    .catch((e) => {
+                        console.log('restaurant:', detail.restaurant);
+                        console.log('address:', detail.address);
+                        console.log('photo:', detail.photo);
+                        console.log('file', fileInfo.file);
+                        console.error(e);
+                    });
+            }
         }
     };
 
@@ -174,7 +228,14 @@ const UpdateRestaurant = () => {
                         <img src={restaurant} className="img_restaurant" />
                     </div>
                     <form className="form_restaurant">
-                        <input className="input_box" type="text" name="restaurant" value={detail.restaurant} readOnly />
+                        <input
+                            id="input_restaurant"
+                            className="input_box"
+                            type="text"
+                            name="restaurant"
+                            onChange={handleChange}
+                            placeholder="음식점을 입력하세요"
+                        />
                     </form>
                 </div>
                 <div className="area_address">
@@ -183,17 +244,18 @@ const UpdateRestaurant = () => {
                     </div>
                     <form className="form_address">
                         <input
+                            id="input_address"
                             className="input_box"
                             type="text"
                             name="address"
-                            placeholder={detailAddress}
+                            placeholder="주소를 입력하세요"
                             onChange={handleChange}
                         />
                     </form>
                 </div>
                 <div className="area_btn">
-                    <button className="btn_restaurant_register" onClick={update}>
-                        수정
+                    <button className="btn_restaurant_register" onClick={post} id="btn_post">
+                        등록
                     </button>
                 </div>
             </div>
@@ -201,4 +263,4 @@ const UpdateRestaurant = () => {
     );
 };
 
-export default UpdateRestaurant;
+export default PostRestaurant;

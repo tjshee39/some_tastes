@@ -62,6 +62,7 @@ app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
   // console.log("서버_file", req.file);
 
   let photo = 'http://localhost:8000/photo/' +  req.file.filename;
+  console.log(req.file)
 
   const sqlQuery = "INSERT INTO tbl_restaurants (restaurant, address, photo) VALUES (?, ?, ?);"
   db.query(sqlQuery, [restaurant, address, photo], (err, result) => {
@@ -160,13 +161,10 @@ app.post("/createReview", async (req, res) => {
 app.get("/reviewList/:bno", async function(req, res) {
   const {bno} = req.params;
 
-  const sqlQuery = `SELECT * FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY regdate desc`;
+  const sqlQuery = `SELECT rno, restaurant, bno, rating, review, DATE_FORMAT(regdate, "%Y-%m-%d") as regdate
+                     FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY regdate desc`;
 
   db.query(sqlQuery, (err, result) => {
-    for (var i in result) {
-      result[i].regdate = result[i].regdate.toISOString().slice(0, 10);
-    }
-    
     res.send(result);
   });
 });
