@@ -65,3 +65,21 @@ a {
     margin-bottom: 20px;
     font-family: 'gureumgothic30';
 }
+
+@media all and (max-width: 1540px){
+	.container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media all and (max-width: 1260px){
+	.container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media all and (max-width: 920px){
+	.container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
