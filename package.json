@@ -46,9 +46,10 @@
   },
   "scripts": {
     "start": "nodemon ./server/index.js",
-    "build": "webpack serve",
+    "build": "webpack --mode production",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"nodemon ./server/index.js \" \"webpack serve\""
+    "dev": "concurrently \"nodemon ./server/index.js \" \"webpack serve\"",
+    "serve": "webpack serve"
   },
   "eslintConfig": {
     "extends": [
