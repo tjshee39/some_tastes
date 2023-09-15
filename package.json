@@ -45,7 +45,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "start": "react-scripts-start",
+    "start": "react-scripts start",
     "build": "webpack --mode production",
     "eject": "react-scripts eject",
     "serve": "webpack serve",
