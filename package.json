@@ -45,11 +45,11 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "start": "nodemon ./server/index.js",
+    "start": "react-scripts-start",
     "build": "webpack --mode production",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"nodemon ./server/index.js \" \"webpack serve\"",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "dev": "nodemon ./server/index.js"
   },
   "eslintConfig": {
     "extends": [
