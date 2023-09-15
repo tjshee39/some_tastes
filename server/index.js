@@ -3,14 +3,11 @@ const express = require("express");
 const bodyParser = require('body-parser');
 
 const db = require('./dbPool.js');
+const fileUpload = require('./fileUpload.js');
+const uploadImage = fileUpload;
 
 const app = express();
-
-// 파일 업로드
-const fs = require('fs');
-const multer = require('multer');
-const uploadImage = multer({dest: './uploadImage/'});
-app.use('/photo', express.static('./uploadImage'));
+app.use('/photo', express.static('./restaurantImage'));
 
 const PORT = process.env.port || 8000;
 
@@ -57,12 +54,8 @@ app.get("/restaurantDetail/:bno", async function(req, res) {
 app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
-  // console.log("서버_restaurant", req.body.restaurant);
-  // console.log("서버_address", req.body.address);
-  // console.log("서버_file", req.file);
 
   let photo = 'http://localhost:8000/photo/' +  req.file.filename;
-  console.log(req.file)
 
   const sqlQuery = "INSERT INTO tbl_restaurants (restaurant, address, photo) VALUES (?, ?, ?);"
   db.query(sqlQuery, [restaurant, address, photo], (err, result) => {
@@ -81,10 +74,7 @@ app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
     photo = req.body.existingPhoto;
   } else {
       photo = 'http://localhost:8000/photo/' + req.file.filename;
-      // console.log('filename', photo);
   }
-
-  // console.log("restaurant", photo);
 
   const sqlQuery =
     "UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
@@ -165,7 +155,6 @@ app.get("/reviewList/:bno", async function(req, res) {
                      FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY rno desc`;
 
   db.query(sqlQuery, (err, result) => {
-    console.log(result)
     res.send(result);
   });
 });
