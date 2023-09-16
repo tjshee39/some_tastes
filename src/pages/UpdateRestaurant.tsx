@@ -62,7 +62,7 @@ const UpdateRestaurant = () => {
     const { bno } = useParams();
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
+        Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
                 console.log('getDetail', res.data);
 
@@ -147,7 +147,7 @@ const UpdateRestaurant = () => {
                 },
             };
 
-            Axios.post(`http://localhost:8000/updateRestaurant/${bno}`, formData, config)
+            Axios.post(`/api/updateRestaurant/${bno}`, formData, config)
                 .then((res) => {
                     alert('음식점 수정 완료');
 

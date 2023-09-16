@@ -24,10 +24,8 @@ const DetailView = () => {
     const { bno } = useParams();
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
+        Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
-                // console.log('getDetail', res.data);
-
                 return res.data;
             })
             .then((data) => {
@@ -40,7 +38,7 @@ const DetailView = () => {
     }, []);
 
     const deleteRestaurant = () => {
-        Axios.post(`http://localhost:8000/deleteRestaurant/${bno}`)
+        Axios.post(`/api/deleteRestaurant/${bno}`)
             .then(() => {
                 alert('정상적으로 삭제되었습니다.');
 

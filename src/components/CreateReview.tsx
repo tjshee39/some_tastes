@@ -17,7 +17,7 @@ const CreateReview = ({ bno }: any) => {
     };
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/restaurantDetail/${bno}`)
+        Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
                 // console.log('getDetail', res.data);
 
@@ -62,7 +62,7 @@ const CreateReview = ({ bno }: any) => {
             data.content = content;
             data.rating = parseInt(rating);
 
-            await Axios.post('http://localhost:8000/createReview', data)
+            await Axios.post('/api/createReview', data)
                 .then((res) => {
                     return res;
                 })

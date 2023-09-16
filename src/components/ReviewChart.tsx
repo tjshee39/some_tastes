@@ -93,7 +93,7 @@ const ReviewChart = ({ bno }: any) => {
     };
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/reviewChart/${bno}`)
+        Axios.get(`/api/reviewChart/${bno}`)
             .then((res) => {
                 return res.data;
             })

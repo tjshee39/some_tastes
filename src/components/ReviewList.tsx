@@ -25,7 +25,7 @@ const ReviewList = ({ bno }: any) => {
     ]);
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/reviewList/${bno}`)
+        Axios.get(`/api/reviewList/${bno}`)
             .then((res) => {
                 return res.data;
             })

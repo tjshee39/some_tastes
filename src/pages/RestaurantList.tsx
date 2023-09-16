@@ -51,7 +51,7 @@ class RestaurantList extends Component {
     };
 
     getList = () => {
-        Axios.get('http://localhost:8000/restaurantList', {})
+        Axios.get('/api/restaurantList', {})
             .then((res) => {
                 const { data } = res;
                 this.setState({

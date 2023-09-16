@@ -64,7 +64,7 @@ const PostRestaurant = () => {
 
     useEffect(() => {
         if (status != 'create') {
-            Axios.get(`http://localhost:8000/restaurantDetail/${status}`)
+            Axios.get(`/api/restaurantDetail/${status}`)
                 .then((res) => {
                     console.log('getDetail', res.data);
 
@@ -190,7 +190,7 @@ const PostRestaurant = () => {
             };
 
             if (status == 'create') {
-                Axios.post('http://localhost:8000/createRestaurant', formData, config)
+                Axios.post('/api/createRestaurant', formData, config)
                     .then((res) => {
                         alert('음식점 등록 완료');
 
@@ -200,11 +200,11 @@ const PostRestaurant = () => {
                         console.error(e);
                     });
             } else {
-                Axios.post(`http://localhost:8000/updateRestaurant/${status}`, formData, config)
+                Axios.post(`/api/updateRestaurant/${status}`, formData, config)
                     .then((res) => {
                         alert('음식점 수정 완료');
 
-                        location.href = `http://localhost:3000/restaurantDetail/${status}`;
+                        location.href = `/restaurantDetail/${status}`;
                     })
                     .catch((e) => {
                         console.log('restaurant:', detail.restaurant);

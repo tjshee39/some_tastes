@@ -1,6 +1,8 @@
 const cors = require('cors');
 const express = require("express");
 const bodyParser = require('body-parser');
+const path = require('path');
+const history = require('connect-history-api-fallback');
 
 const db = require('./dbPool.js');
 const fileUpload = require('./fileUpload.js');
@@ -10,6 +12,8 @@ const app = express();
 app.use('/photo', express.static('./restaurantImage'));
 
 const PORT = process.env.port || 8000;
+
+
 
 let corsOptions = {
   origin: "*", // 출처 허용 옵션
@@ -25,10 +29,12 @@ app.listen(PORT, () => {
   console.log(`running on port ${PORT}`);
 });
 
+app.use(history());
+app.use(express.static('./dist'));
 
 // restaurantList::GET
 // 식당 목록 출력
-app.get("/restaurantList", async function(req, res) {
+app.get("/api/restaurantList", async function(req, res) {
   const sqlQuery = "SELECT * FROM tbl_restaurants WHERE available = 'Y' ORDER BY bno DESC";
 
   db.query(sqlQuery, (err, result) => {
@@ -38,7 +44,7 @@ app.get("/restaurantList", async function(req, res) {
 
 // restaurantDatail::GET
 // 식당 정보 출력
-app.get("/restaurantDetail/:bno", async function(req, res) {
+app.get("/api/restaurantDetail/:bno", async function(req, res) {
   const {bno} = req.params;
   // console.log("bno:", bno);
   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
@@ -65,7 +71,7 @@ app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
 
 // updateRestaurant::POST
 // 식당 정보 수정
-app.post("/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
+app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
   let photo;
@@ -148,7 +154,7 @@ app.post("/createReview", async (req, res) => {
 
 // reviewList::GET
 // 리뷰 목록 출력
-app.get("/reviewList/:bno", async function(req, res) {
+app.get("/api/reviewList/:bno", async function(req, res) {
   const {bno} = req.params;
 
   const sqlQuery = `SELECT rno, restaurant, bno, rating, review, DATE_FORMAT(regdate, "%Y-%m-%d") as regdate
@@ -161,7 +167,7 @@ app.get("/reviewList/:bno", async function(req, res) {
 
 // reviewChart::GET
 // 리뷰 별점 차트
-app.get("/reviewChart/:bno", async function(req, res) {
+app.get("/api/reviewChart/:bno", async function(req, res) {
   const {bno} = req.params;
   const keys = ['rating', 'count'];
   let ratingCount = [{}, {}, {}, {}, {}];
