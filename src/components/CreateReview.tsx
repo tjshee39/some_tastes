@@ -19,8 +19,6 @@ const CreateReview = ({ bno }: any) => {
     useEffect(() => {
         Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
-                // console.log('getDetail', res.data);
-
                 return res.data[0].restaurant;
             })
             .then((data) => {
@@ -33,7 +31,6 @@ const CreateReview = ({ bno }: any) => {
     };
 
     const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log('onKeyPress', reload);
         if (e.code === 'Enter') {
             write();
         }

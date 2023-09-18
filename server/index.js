@@ -55,7 +55,7 @@ app.get("/api/restaurantDetail/:bno", async function(req, res) {
 
 // createRestaurant::POST
 // 식당 정보 등록
-app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
+app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
 
@@ -80,8 +80,7 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
       photo = '/photo/' + req.file.filename;
   }
 
-  const sqlQuery =
-    "UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
+  const sqlQuery ="UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
   db.query(sqlQuery, [restaurant, address, photo, restaurant], (err, result) => {
     // console.log("===== update restaurant =====");
     // console.log(result);
