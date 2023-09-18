@@ -6,8 +6,8 @@
 `npm run dev`
 3. open browser<br>
 `http://localhost:3000`
-4. come visit me
-`https://some-tastes-1sunny.koyeb.app/`
+4. come visit me<br>
+<a href="https://some-tastes-1sunny.koyeb.app/">`https://some-tastes-1sunny.koyeb.app/`</a>
 
 ## Project introduction
 #### 📌메인화면
