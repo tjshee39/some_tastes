@@ -54,12 +54,10 @@
   },
   "scripts": {
     "start": "nodemon ./server/index.js",
-    "start:prod": "env-cmd -f .env.production react-scripts start",
-    "build": "env-cmd -f .env.production webpack",
+    "build": "webpack --mode production",
     "eject": "react-scripts eject",
     "serve": "webpack serve",
-    "dev": "nodemon ./server/index.js",
-    "dev:prod": "env-cmd -f .env.production nodemon ./server/index.js"
+    "dev": "nodemon ./server/index.js"
   },
   "eslintConfig": {
     "extends": [

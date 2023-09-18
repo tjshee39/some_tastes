@@ -53,7 +53,6 @@ class RestaurantList extends Component {
     };
 
     getList = () => {
-        console.log(process.env.NODE_ENV);
         Axios.get('/api/restaurantList', {})
             .then((res) => {
                 const { data } = res;
