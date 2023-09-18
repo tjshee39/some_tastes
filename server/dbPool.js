@@ -1,23 +1,21 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
+const dotenv = require('dotenv').config().parsed;
 
 const db = mysql.createPool({
-    host: "122.45.13.226",
-    user: "usr_somet",
-    password: "1234",
-    database: "sometaste",
-    port: "3306"
+    host: dotenv.REACT_APP_DB_HOST,
+    user: dotenv.REACT_APP_DB_USER,
+    password: dotenv.REACT_APP_DB_PW,
+    database: dotenv.REACT_APP_DB_SCHEMA,
+    port: dotenv.REACT_APP_DB_PORT,
+    insecureAuth: true,
 });
 
-// const db = mysql.createPool({
-//     host: "localhost",
-//     user: "root",
-//     password: "1234",
-//     database: "sometaste",
-// });
-
 db.getConnection(function(err, conn) {
-    if(err) console.log(err);
-    console.log("Database connected");
+    if(err) {
+        console.log(err);
+    } else {
+        console.log("Database connected");
+    }
 })
 
   module.exports = db;
