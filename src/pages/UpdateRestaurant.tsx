@@ -151,7 +151,7 @@ const UpdateRestaurant = () => {
                 .then((res) => {
                     alert('음식점 수정 완료');
 
-                    location.href = `http://localhost:3000/restaurantDetail/${bno}`;
+                    location.href = `/restaurantDetail/${bno}`;
                 })
                 .catch((e) => {
                     console.log('restaurant:', detail.restaurant);

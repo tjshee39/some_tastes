@@ -71,7 +71,7 @@ const CreateReview = ({ bno }: any) => {
                     setContent('');
                     setRating('');
 
-                    location.href = `http://localhost:3000/restaurantDetail/${bno}`;
+                    location.href = `/restaurantDetail/${bno}`;
                     return;
                 })
                 .catch((e) => {

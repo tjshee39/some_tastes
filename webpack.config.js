@@ -1,5 +1,8 @@
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 플러그인
+const dotenv = require("dotenv-webpack");
 const path = require('path'); // 해당 파일의 경로
+const DotenvWebpackPlugin = require("dotenv-webpack");
 
 module.exports = {
 	// *==*==*==*==*==*==*==*
@@ -54,7 +57,11 @@ module.exports = {
         favicon: "./public/favicon.ico",
         manifest: "./public/manifest.json",
         PUBLIC_URL: "static"
-    }),      
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser.js',
+    }),
+    new dotenv(),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"]

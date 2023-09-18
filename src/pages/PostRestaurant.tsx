@@ -194,7 +194,7 @@ const PostRestaurant = () => {
                     .then((res) => {
                         alert('음식점 등록 완료');
 
-                        location.href = 'http://localhost:3000/';
+                        location.href = '/';
                     })
                     .catch((e) => {
                         console.error(e);

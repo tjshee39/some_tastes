@@ -61,7 +61,7 @@ app.post("/createRestaurant", uploadImage.single('photo'), (req, res) => {
   let restaurant = req.body.restaurant;
   let address = req.body.address;
 
-  let photo = 'http://localhost:8000/photo/' +  req.file.filename;
+  let photo = '/photo/' +  req.file.filename;
 
   const sqlQuery = "INSERT INTO tbl_restaurants (restaurant, address, photo) VALUES (?, ?, ?);"
   db.query(sqlQuery, [restaurant, address, photo], (err, result) => {
@@ -79,7 +79,7 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
   if (typeof(req.file) == 'undefined') {
     photo = req.body.existingPhoto;
   } else {
-      photo = 'http://localhost:8000/photo/' + req.file.filename;
+      photo = '/photo/' + req.file.filename;
   }
 
   const sqlQuery =
@@ -94,7 +94,7 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
 
 // deleteRestaurant::POST
 // 식당 삭제
-app.post("/deleteRestaurant/:bno", (req, res) => {
+app.post("/api/deleteRestaurant/:bno", (req, res) => {
   const {bno} = req.params;
 
   const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
@@ -107,7 +107,7 @@ app.post("/deleteRestaurant/:bno", (req, res) => {
 
 // createReview::POST
 // 리뷰 등록
-app.post("/createReview", async (req, res) => {
+app.post("/api/createReview", async (req, res) => {
   let data = [
     bno = req.body.bno,
     restaurant = req.body.restaurant,

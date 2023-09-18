@@ -12,6 +12,8 @@ import pencil from '../assets/images/pencil.png';
  */
 
 class RestaurantList extends Component {
+    API_BASE_URL = process.env.REACT_APP_HOME_URL;
+
     Restaurants = ({
         bno,
         restaurant,
@@ -54,6 +56,9 @@ class RestaurantList extends Component {
         Axios.get('/api/restaurantList', {})
             .then((res) => {
                 const { data } = res;
+                data.forEach((restaurant: any) => {
+                    restaurant.photo = this.API_BASE_URL + restaurant.photo;
+                });
                 this.setState({
                     restaurantList: data,
                 });
@@ -64,7 +69,7 @@ class RestaurantList extends Component {
     };
 
     // 컴포넌트 인스턴스가 생성되어 DOM에 삽입될 때 호출
-    // 화면이 출력되자마자 렌더링 해야하는 데이터를 가져올 때 해당 메서드 안에 axios 사용  (??????)
+    // 화면 렌더링 되자마자 실행
     componentDidMount() {
         this.getList();
     }
