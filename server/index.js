@@ -126,7 +126,8 @@ app.post("/api/createReview", async (req, res) => {
   // 별점 평균 구하기
   async function getAvgRating() {
     let sqlQuery2 = `SELECT ROUND(AVG(rating), 1) as rating FROM tbl_reviews WHERE bno='${data[0]}'`
-    await db.query(sqlQuery2, (err, result) => {
+
+    db.query(sqlQuery2, (err, result) => {
       if (err) {
         console.log("ERROR::", err);
       } else {
