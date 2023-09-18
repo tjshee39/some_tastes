@@ -1,11 +1,13 @@
 # 🌝맛점몇점<br>
 ## How to start
 1. frontend<br>
-`npm run build`
+`npm run serve`
 2. backend<br>
-`npm start`
+`npm run dev`
 3. open browser<br>
 `http://localhost:3000`
+4. come visit me
+`https://some-tastes-1sunny.koyeb.app/`
 
 ## Project introduction
 #### 📌메인화면
