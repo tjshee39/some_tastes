@@ -1,9 +1,9 @@
 # 🌝맛점몇점<br>
 ## How to start
 1. frontend<br>
-`npm run serve`
+`npm run frontend`
 2. backend<br>
-`npm run dev`
+`npm run backend`
 3. open browser<br>
 `http://localhost:3000`
 4. come visit me<br>
