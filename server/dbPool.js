@@ -2,11 +2,11 @@ const mysql = require("mysql2");
 const dotenv = require('dotenv').config().parsed;
 
 const db = mysql.createPool({
-    host: dotenv.REACT_APP_DB_HOST,
-    user: dotenv.REACT_APP_DB_USER,
-    password: dotenv.REACT_APP_DB_PW,
-    database: dotenv.REACT_APP_DB_SCHEMA,
-    port: dotenv.REACT_APP_DB_PORT,
+    host: process.env.REACT_APP_DB_HOST,
+    user: process.env.REACT_APP_DB_USER,
+    password: process.env.REACT_APP_DB_PW,
+    database: process.env.REACT_APP_DB_SCHEMA,
+    port: process.env.REACT_APP_DB_PORT,
     insecureAuth: true,
 });
 
