@@ -14,7 +14,6 @@ db.getConnection(function(err, conn) {
     if(err) {
         console.log(err);
     } else {
-        console.log(dotenv)
         console.log("Database connected");
     }
 })

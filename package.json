@@ -56,8 +56,8 @@
     "start": "nodemon ./server/index.js",
     "build": "webpack --mode production",
     "eject": "react-scripts eject",
-    "serve": "webpack serve",
-    "dev": "nodemon ./server/index.js"
+    "frontend": "webpack serve",
+    "backend": "nodemon ./server/index.js"
   },
   "eslintConfig": {
     "extends": [
