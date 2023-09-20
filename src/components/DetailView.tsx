@@ -24,6 +24,11 @@ const DetailView = () => {
     const { bno } = useParams();
 
     useEffect(() => {
+        let baseUrl = process.env.REACT_APP_HOME_URL;
+        if (process.env.REACT_APP_MODE == 'prod') {
+            baseUrl = 'https://some-tastes-1sunny.koyeb.app';
+        }
+
         Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
                 return res.data;
@@ -32,7 +37,7 @@ const DetailView = () => {
                 setDetail({
                     restaurant: data[0].restaurant,
                     address: data[0].address,
-                    photo: process.env.REACT_APP_HOME_URL + data[0].photo,
+                    photo: baseUrl + data[0].photo,
                 });
             });
     }, []);

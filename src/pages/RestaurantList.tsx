@@ -52,11 +52,16 @@ class RestaurantList extends Component {
     };
 
     getList = () => {
+        let baseUrl = process.env.REACT_APP_HOME_URL;
+        if (process.env.REACT_APP_MODE == 'prod') {
+            baseUrl = 'https://some-tastes-1sunny.koyeb.app';
+        }
+
         Axios.get('/api/restaurantList', {})
             .then((res) => {
                 const { data } = res;
                 data.forEach((restaurant: any) => {
-                    restaurant.photo = process.env.REACT_APP_HOME_URL + restaurant.photo;
+                    restaurant.photo = baseUrl + restaurant.photo;
                 });
                 this.setState({
                     restaurantList: data,
