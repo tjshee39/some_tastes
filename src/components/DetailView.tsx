@@ -22,7 +22,6 @@ const DetailView = () => {
     });
 
     const { bno } = useParams();
-    const API_BASE_URL = process.env.REACT_APP_HOME_URL;
 
     useEffect(() => {
         Axios.get(`/api/restaurantDetail/${bno}`)
@@ -33,7 +32,7 @@ const DetailView = () => {
                 setDetail({
                     restaurant: data[0].restaurant,
                     address: data[0].address,
-                    photo: API_BASE_URL + data[0].photo,
+                    photo: process.env.REACT_APP_HOME_URL + data[0].photo,
                 });
             });
     }, []);

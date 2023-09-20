@@ -13,8 +13,6 @@ import pencil from '../assets/images/pencil.png';
  */
 
 class RestaurantList extends Component {
-    API_BASE_URL = process.env.REACT_APP_HOME_URL;
-
     Restaurants = ({
         bno,
         restaurant,
@@ -58,7 +56,7 @@ class RestaurantList extends Component {
             .then((res) => {
                 const { data } = res;
                 data.forEach((restaurant: any) => {
-                    restaurant.photo = this.API_BASE_URL + restaurant.photo;
+                    restaurant.photo = process.env.REACT_APP_HOME_URL + restaurant.photo;
                 });
                 this.setState({
                     restaurantList: data,
