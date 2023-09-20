@@ -1,24 +1,17 @@
 .App {
   text-align: center;
-  margin-left: 15%;
-  margin-right: 15%;
   font-family: 'gureumgothic50';
 }
 
 .App-logo {
-  height: 30vmin;
+  /* height: 30vmin; */
   pointer-events: none;
+  animation: App-logo-spin 3 0.5s linear;
 }
 
 .banner {
   margin-top: 100px;
   margin-bottom: 100px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {

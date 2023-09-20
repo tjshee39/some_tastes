@@ -8,6 +8,60 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ReviewChart = ({ bno }: any) => {
     let [series, setSeries] = useState({ name: '★', data: [0, 0, 0, 0, 0] });
+    // let chartHeight = '400px';
+
+    const [windowWidth, setWindowWidth] = useState({
+        width: window.innerWidth,
+    });
+
+    const [chartHeight, setChartHeight] = useState({
+        height: '400px',
+    });
+
+    const useWindowSizeCustom = () => {
+        useEffect(() => {
+            if (typeof window !== 'undefined') {
+                const handleResize = () => {
+                    setWindowWidth({
+                        width: window.innerWidth,
+                    });
+                };
+
+                window.addEventListener('resize', handleResize);
+
+                // 초기값을 설정할 수 있도록 handleResize 함수를 한 번 실행시킨다.
+                handleResize();
+
+                console.log('ddddd');
+
+                // 이벤트 리스너를 제거하여 이벤트 리스너가 리사이즈될 때마다 계속해서 생겨나지 않도록 처리한다. (clean up)
+                return () => window.removeEventListener('resize', handleResize);
+            } else {
+                return () =>
+                    window.removeEventListener('resize', () => {
+                        return null;
+                    });
+            }
+        }, []); // 컴포넌트가 처음 마운트 될때와 언마운트 될 때 실행
+
+        return windowWidth;
+    };
+
+    useWindowSizeCustom();
+
+    useEffect(() => {
+        console.log('nn');
+        if (windowWidth.width < 650) {
+            console.log('650<');
+            setChartHeight({
+                height: '250px',
+            });
+        } else if (windowWidth.width >= 650) {
+            setChartHeight({
+                height: '400px',
+            });
+        }
+    }, [windowWidth]);
 
     const options: ApexOptions = {
         fill: {
@@ -15,7 +69,7 @@ const ReviewChart = ({ bno }: any) => {
             opacity: 1,
         },
         chart: {
-            height: '400px',
+            height: chartHeight.height,
             type: 'bar',
             toolbar: {
                 show: false,
@@ -109,7 +163,7 @@ const ReviewChart = ({ bno }: any) => {
                     options={options}
                     series={[{ name: '인원', data: series.data }]}
                     type="bar"
-                    height={400}
+                    height={chartHeight.height}
                 ></ApexCharts>
             </div>
         </>

@@ -17,7 +17,7 @@ function App() {
                 <div className="App">
                     <div className="banner">
                         <Link to="/">
-                            <img src={logo} className="logo_img" />
+                            <img src={logo} className="App-logo" />
                         </Link>
                     </div>
                 </div>

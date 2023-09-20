@@ -41,3 +41,34 @@
     border-radius: 10px;
     padding: 10px;
 }
+
+@media all and (max-width: 920px) {
+
+    .review_container {
+        width: 100%;
+        column-gap: 0px;
+    }
+
+    .area_review {
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px;
+    }
+
+    .area_rating {
+        margin-bottom: 0px;
+    }
+
+    .area_regdate {
+        margin-left: 0px;
+        font-size: 16px;
+    }
+
+    .area_rating, .area_regdate {
+        display: flow;
+    }
+
+    .area_content {
+        font-size: 14px;
+    }
+}

@@ -92,3 +92,29 @@
   font-size: 1.2rem;
   font-family: 'gureumgothic50';
 }
+
+@media all and (max-width: 600px){
+  .select_img {
+    width: 300px;
+    height: 300px;
+  }
+
+  .img_restaurant, .img_address {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+  }
+
+  .input_box {
+    font-size: inherit;
+    line-height: 3rem;
+  }
+
+  .btn_restaurant_register {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: inherit;
+    width: 70px;
+    height: 40px;
+  }
+}

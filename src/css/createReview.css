@@ -55,3 +55,38 @@
     margin-bottom: 20px;
     float: right;
 }
+
+@media all and (max-width: 920px) {
+    .info_restaurant {
+        font-family: 'gureumgothic50';
+        font-size: 18px;
+        margin-right: 0px;
+    }
+
+    .info_restaurant, .area_starRating {
+        display: flow;
+    }
+
+    .area_btn {
+        font-family: 'gureumgothic50';
+        font-size: 16px;
+        margin: auto;
+        width: 50%;
+    }
+
+    .btn_review_register {
+        width: 90px;
+        height: 40px;
+        background: #ffd02e;
+        border: none;
+        border-radius: 30px;
+        margin-bottom: 20px;
+        float: right;
+    }
+
+    .input_content {
+        width: 60%;
+        height: 70px;
+        font-size: 16px;
+    }
+}

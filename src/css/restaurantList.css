@@ -38,6 +38,8 @@ a {
 
 .content {
     width: 200px;
+    justify-content: center;
+    display: grid;
 }
 
 .content_img:hover {
@@ -48,7 +50,7 @@ a {
     width: 200px;
     height: 200px;
     background-color: #ffd02e !important;
-    margin: 20px;
+    margin-bottom: 5px;
     border-top-left-radius: 15px; 
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px; 
@@ -59,11 +61,15 @@ a {
 
 .content_restaurant {
     font-family: 'gureumgothic50';
+    justify-content: center;
+    display: grid;
 }
 
 .content_review_rating {
     margin-bottom: 20px;
     font-family: 'gureumgothic30';
+    justify-content: center;
+    display: grid;
 }
 
 @media all and (max-width: 1540px){
@@ -79,7 +85,23 @@ a {
 }
 
 @media all and (max-width: 920px){
+    .content_img {
+        width: 160px;
+        height: 160px;
+        background-color: #ffd02e !important;
+        margin: 10px;
+    }
+}
+
+@media all and (max-width: 770px){
 	.container {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content_img {
+        width: 140px;
+        height: 140px;
+        background-color: #ffd02e !important;
+        margin: 10px;
     }
 }

@@ -2,6 +2,7 @@ import '../App.css';
 import React, { useState } from 'react';
 import { Component } from 'react';
 import Axios from 'axios';
+import $ from 'jquery';
 import '../css/restaurantList.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
@@ -55,6 +56,8 @@ class RestaurantList extends Component {
     getList = () => {
         Axios.get('/api/restaurantList', {})
             .then((res) => {
+                console.log('node_env', process.env.NODE_ENV);
+                console.log('mode', process.env.REACT_APP_MODE);
                 const { data } = res;
                 data.forEach((restaurant: any) => {
                     restaurant.photo = this.API_BASE_URL + restaurant.photo;
@@ -72,6 +75,10 @@ class RestaurantList extends Component {
     // 화면 렌더링 되자마자 실행
     componentDidMount() {
         this.getList();
+
+        if (process.env.REACT_APP_MODE != 'prod') {
+            $('.board_create').hide();
+        }
     }
 
     /**

@@ -46,6 +46,7 @@ const fileExtensionValid = ({ name }: { name: string }): boolean => {
 
 const PostRestaurant = () => {
     const status = useParams().status;
+    const API_BASE_URL = process.env.REACT_APP_HOME_URL;
 
     const [detail, setDetail] = useState({
         restaurant: '',
@@ -73,7 +74,7 @@ const PostRestaurant = () => {
                 .then((data) => {
                     setDetail({
                         restaurant: data.restaurant,
-                        photo: data.photo,
+                        photo: API_BASE_URL + data.photo,
                         address: data.address,
                     });
 
