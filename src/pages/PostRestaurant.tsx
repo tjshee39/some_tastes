@@ -67,8 +67,6 @@ const PostRestaurant = () => {
         if (status != 'create') {
             Axios.get(`/api/restaurantDetail/${status}`)
                 .then((res) => {
-                    console.log('getDetail', res.data);
-
                     return res.data[0];
                 })
                 .then((data) => {
@@ -102,7 +100,6 @@ const PostRestaurant = () => {
         const onChangeImage = (e: any) => {
             const reader = new FileReader();
             const file = imageRef.current.files[0];
-            console.log('imageUrl', file);
 
             // 파일 확장자 체크
             if (!fileExtensionValid(file)) {
@@ -191,14 +188,28 @@ const PostRestaurant = () => {
             };
 
             if (status == 'create') {
-                Axios.post('/api/createRestaurant', formData, config)
+                Axios.get('/api/existRestaurant', { params: { restaurant: detail.restaurant } })
                     .then((res) => {
-                        alert('음식점 등록 완료');
-
-                        location.href = '/';
+                        return res.data[0];
                     })
-                    .catch((e) => {
-                        console.error(e);
+                    .then((data) => {
+                        const count = data.COUNT;
+                        if (count != 0) {
+                            alert('이미 등록된 음식점입니다.');
+                        } else {
+                            Axios.post('/api/createRestaurant', formData, config)
+                                .then((res) => {
+                                    if (res.data != 'undefined') {
+                                        alert('음식점 등록 완료');
+                                        location.href = '/';
+                                    } else {
+                                        alert('동일한 음식점이 등록되어있습니다.');
+                                    }
+                                })
+                                .catch((e) => {
+                                    console.error(e);
+                                });
+                        }
                     });
             } else {
                 Axios.post(`/api/updateRestaurant/${status}`, formData, config)
@@ -208,10 +219,6 @@ const PostRestaurant = () => {
                         location.href = `/restaurantDetail/${status}`;
                     })
                     .catch((e) => {
-                        console.log('restaurant:', detail.restaurant);
-                        console.log('address:', detail.address);
-                        console.log('photo:', detail.photo);
-                        console.log('file', fileInfo.file);
                         console.error(e);
                     });
             }

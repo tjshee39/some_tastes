@@ -47,6 +47,8 @@ const CreateReview = ({ bno }: any) => {
             alert('점수를 선택하지 않으셨어요!');
         } else if (content == '') {
             alert('리뷰 내용을 작성해주세요');
+        } else if (content.length > 100) {
+            alert('리뷰는 최대 100글자까지 작성할 수 있습니다.');
         } else {
             let data = {
                 bno: bno,
@@ -86,13 +88,12 @@ const CreateReview = ({ bno }: any) => {
                         <StarRating key={bno} value={rating} getRating={getRating} />
                     </div>
                     <form className="form_content">
-                        <input
+                        <textarea
                             className="input_content"
-                            type="text"
                             name="content"
                             onChange={handleChange}
                             placeholder="리뷰 내용을 작성하세요✍"
-                            onKeyDown={onKeyPress}
+                            // onKeyDown={onKeyPress}
                         />
                     </form>
                     <div className="area_btn">

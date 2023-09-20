@@ -59,10 +59,6 @@ class CreateRestaurant extends Component {
     write = () => {
         if (this.state.restaurant === '' || this.state.address === '' || this.state.file === '') {
             alert('모든 항목을 작성해주세요');
-            console.log('restaurant:', this.state.restaurant);
-            console.log('address:', this.state.address);
-            console.log('photo:', this.state.file);
-            console.log('fileName:', this.state.fileName);
         } else {
             const formData = new FormData();
             formData.append('restaurant', this.state.restaurant);
@@ -117,7 +113,6 @@ class CreateRestaurant extends Component {
             reader.readAsDataURL(file);
             reader.onloadend = () => {
                 setImageUrl(reader.result);
-                console.log('이미지 주소', reader.result);
 
                 this.setState({
                     file: e.target.files[0],

@@ -64,8 +64,6 @@ const UpdateRestaurant = () => {
     useEffect(() => {
         Axios.get(`/api/restaurantDetail/${bno}`)
             .then((res) => {
-                console.log('getDetail', res.data);
-
                 return res.data;
             })
             .then((data) => {
@@ -86,7 +84,6 @@ const UpdateRestaurant = () => {
         const onChangeImage = (e: any) => {
             const reader = new FileReader();
             const file = imageRef.current.files[0];
-            console.log('imageUrl', file);
 
             // 파일 확장자 체크
             if (!fileExtensionValid(file)) {
@@ -154,10 +151,6 @@ const UpdateRestaurant = () => {
                     location.href = `/restaurantDetail/${bno}`;
                 })
                 .catch((e) => {
-                    console.log('restaurant:', detail.restaurant);
-                    console.log('address:', detailAddress);
-                    console.log('photo:', detail.photo);
-                    console.log('file', fileInfo.file);
                     console.error(e);
                 });
         }

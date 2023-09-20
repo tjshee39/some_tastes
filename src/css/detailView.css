@@ -149,6 +149,10 @@
         margin-left: 10px;
     }
 
+    .area_reviewChart {
+        margin-bottom: 40px;
+    }
+
     #SvgjsText1102 {
         font-size: 18px;
     } 
@@ -158,8 +162,9 @@
     }
 }
 
-@media all and (max-width: 920px) {
+@media all and (max-width: 650px) {
     .area_reviewChart {
-        margin-bottom: 0px;
+        height: 250px;
+        margin-bottom: 20px;
     }
 }

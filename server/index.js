@@ -44,12 +44,25 @@ app.get("/api/restaurantList", async function(req, res) {
 // 식당 정보 출력
 app.get("/api/restaurantDetail/:bno", async function(req, res) {
   const {bno} = req.params;
-  // console.log("bno:", bno);
   const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
   db.query(sqlQuery, (err, result) => {
-    // console.log("===== restaurantDetail =====");
-    // console.log(result);
     res.send(result);
+  });
+});
+
+// existRestaurant::GET
+// 식당 존재 여부
+app.get("/api/existRestaurant", async function(req, res) {
+  //let restaurant = req.body.restaurant;
+  let restaurant = req.query.restaurant;
+  
+  const sqlQuery = `SELECT COUNT(*) AS COUNT FROM tbl_restaurants WHERE restaurant = '${restaurant}'`;
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.log("ERROR::", err);
+    } else {
+      res.send(result);
+    }
   });
 });
 
@@ -63,7 +76,11 @@ app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
 
   const sqlQuery = "INSERT INTO tbl_restaurants (restaurant, address, photo) VALUES (?, ?, ?);"
   db.query(sqlQuery, [restaurant, address, photo], (err, result) => {
-    res.send(result);
+    if (result != undefined) {
+      res.send(result);
+    } else {
+      res.send();
+    }
   });
 });
 
@@ -82,8 +99,6 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
 
   const sqlQuery ="UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
   db.query(sqlQuery, [restaurant, address, photo, restaurant], (err, result) => {
-    // console.log("===== update restaurant =====");
-    // console.log(result);
     res.send(result);
   });
   
@@ -97,7 +112,6 @@ app.post("/api/deleteRestaurant/:bno", (req, res) => {
   const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
 
   db.query(sqlQuery, (err, result) => {
-    // console.log("==== delete restaurant ====");
     res.send(result);
   })
 });

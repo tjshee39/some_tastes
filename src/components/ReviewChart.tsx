@@ -32,8 +32,6 @@ const ReviewChart = ({ bno }: any) => {
                 // 초기값을 설정할 수 있도록 handleResize 함수를 한 번 실행시킨다.
                 handleResize();
 
-                console.log('ddddd');
-
                 // 이벤트 리스너를 제거하여 이벤트 리스너가 리사이즈될 때마다 계속해서 생겨나지 않도록 처리한다. (clean up)
                 return () => window.removeEventListener('resize', handleResize);
             } else {
@@ -50,9 +48,7 @@ const ReviewChart = ({ bno }: any) => {
     useWindowSizeCustom();
 
     useEffect(() => {
-        console.log('nn');
         if (windowWidth.width < 650) {
-            console.log('650<');
             setChartHeight({
                 height: '250px',
             });
