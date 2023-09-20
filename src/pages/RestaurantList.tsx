@@ -56,8 +56,6 @@ class RestaurantList extends Component {
     getList = () => {
         Axios.get('/api/restaurantList', {})
             .then((res) => {
-                console.log('node_env', process.env.NODE_ENV);
-                console.log('mode', process.env.REACT_APP_MODE);
                 const { data } = res;
                 data.forEach((restaurant: any) => {
                     restaurant.photo = this.API_BASE_URL + restaurant.photo;
@@ -76,9 +74,9 @@ class RestaurantList extends Component {
     componentDidMount() {
         this.getList();
 
-        if (process.env.REACT_APP_MODE != 'prod') {
-            $('.board_create').hide();
-        }
+        // if (process.env.REACT_APP_MODE == 'prod') {
+        //     $('.board_create').hide();
+        // }
     }
 
     /**
