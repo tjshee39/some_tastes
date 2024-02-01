@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="restaurantMapper">
+
+    <select id="selectRestaurantList">
+        SELECT * 
+        FROM tbl_restaurants 
+        WHERE available = 'Y' 
+        ORDER BY bno DESC
+    </select>
+
+    <select id="selectRestaurantDetail">
+        SELECT 
+            restaurant, 
+            address, 
+            photo, 
+            rating 
+        FROM tbl_restaurants 
+        WHERE bno = #{bno}
+    </select>
+
+    <select id="selectRestaurantExist">
+        SELECT COUNT(*) AS COUNT 
+        FROM tbl_restaurants 
+        WHERE restaurant = #{restaurant}
+    </select>
+
+    <insert id="insertRestaurant">
+        INSERT INTO tbl_restaurants (restaurant, address, photo) 
+        VALUES (
+            #{restaurant},
+            #{address},
+            #{photo}
+        )
+    </insert>
+
+    <update id="updateRestaurant">
+        UPDATE tbl_restaurants 
+        SET 
+            restaurant = #{restaurant}, 
+            address = #{address}, 
+            photo = #{photo} 
+        WHERE restaurant = #{restaurant}
+    </update>
+
+    <update id="deleteREstaurant">
+        UPDATE tbl_restaurants 
+        SET available = 'N' 
+        WHERE bno = #{bno}
+    </update>
+
+</mapper>

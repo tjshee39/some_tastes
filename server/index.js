@@ -5,15 +5,16 @@ const path = require('path');
 const history = require('connect-history-api-fallback');
 
 const db = require('./dbPool.js');
+const mybatisMapper = require('mybatis-mapper');
 const fileUpload = require('./fileUpload.js');
 const uploadImage = fileUpload;
+const mapperPath = '../reviewmanagement/src/resources/mappers';
 
 const app = express();
-app.use('/photo', express.static('./restaurantImage'));
 
 const PORT = process.env.port || 8000;
 
-let corsOptions = {
+const corsOptions = {
   origin: "*", // 출처 허용 옵션
   credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
 };
@@ -21,7 +22,8 @@ let corsOptions = {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
-app.use(bodyParser.json());//기본적으로 REST API 에서는 데이터 주고받을때 json 데이터 형식으로 주고받음
+app.use(bodyParser.json());  //기본적으로 REST API 에서는 데이터 주고받을때 json 데이터 형식으로 주고받음
+app.use('/photo', express.static('./restaurantImage'));
 
 app.listen(PORT, () => {
   console.log(`running on port ${PORT}`);
@@ -30,10 +32,16 @@ app.listen(PORT, () => {
 app.use(history());
 app.use(express.static('./dist'));
 
+mybatisMapper.createMapper(
+  [`${mapperPath}/restaurantMapper.xml`,
+  `${mapperPath}/reviewMapper.xml`]);
+
+  const format = {language: 'sql', indent: ' '};
+
 // restaurantList::GET
 // 식당 목록 출력
 app.get("/api/restaurantList", async function(req, res) {
-  const sqlQuery = "SELECT * FROM tbl_restaurants WHERE available = 'Y' ORDER BY bno DESC";
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'selectRestaurantList');
 
   db.query(sqlQuery, (err, result) => {
     res.send(result);
@@ -43,8 +51,9 @@ app.get("/api/restaurantList", async function(req, res) {
 // restaurantDatail::GET
 // 식당 정보 출력
 app.get("/api/restaurantDetail/:bno", async function(req, res) {
-  const {bno} = req.params;
-  const sqlQuery = "SELECT restaurant, address, photo, rating FROM tbl_restaurants WHERE bno = " + bno;
+  const param = {bno: req.params.bno}
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'selectRestaurantDetail', param, format);
+
   db.query(sqlQuery, (err, result) => {
     res.send(result);
   });
@@ -53,10 +62,9 @@ app.get("/api/restaurantDetail/:bno", async function(req, res) {
 // existRestaurant::GET
 // 식당 존재 여부
 app.get("/api/existRestaurant", async function(req, res) {
-  //let restaurant = req.body.restaurant;
-  let restaurant = req.query.restaurant;
-  
-  const sqlQuery = `SELECT COUNT(*) AS COUNT FROM tbl_restaurants WHERE restaurant = '${restaurant}'`;
+  const param = {restaurant: req.query.restaurant};
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'selectRestaurantExist', param, format);
+
   db.query(sqlQuery, (err, result) => {
     if (err) {
       console.log("ERROR::", err);
@@ -69,13 +77,15 @@ app.get("/api/existRestaurant", async function(req, res) {
 // createRestaurant::POST
 // 식당 정보 등록
 app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
-  let restaurant = req.body.restaurant;
-  let address = req.body.address;
+  const param = {
+    restaurant: req.body.restaurant,
+    address: req.body.address,
+    photo: '/photo/' +  req.file.filename
+  }
 
-  let photo = '/photo/' +  req.file.filename;
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'insertRestaurant', param, format);
 
-  const sqlQuery = "INSERT INTO tbl_restaurants (restaurant, address, photo) VALUES (?, ?, ?);"
-  db.query(sqlQuery, [restaurant, address, photo], (err, result) => {
+  db.query(sqlQuery, (err, result) => {
     if (result != undefined) {
       res.send(result);
     } else {
@@ -87,18 +97,23 @@ app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
 // updateRestaurant::POST
 // 식당 정보 수정
 app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) => {
-  let restaurant = req.body.restaurant;
-  let address = req.body.address;
   let photo;
 
   if (typeof(req.file) == 'undefined') {
     photo = req.body.existingPhoto;
   } else {
-      photo = '/photo/' + req.file.filename;
+    photo = '/photo/' + req.file.filename;
   }
 
-  const sqlQuery ="UPDATE tbl_restaurants SET restaurant = ?, address = ?, photo = ? WHERE restaurant = ?";
-  db.query(sqlQuery, [restaurant, address, photo, restaurant], (err, result) => {
+  const param = {
+    restaurant: req.body.restaurant,
+    address: req.body.address,
+    photo: photo
+  }
+
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'updateRestaurant', param, format);
+
+  db.query(sqlQuery, (err, result) => {
     res.send(result);
   });
   
@@ -107,9 +122,9 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
 // deleteRestaurant::POST
 // 식당 삭제
 app.post("/api/deleteRestaurant/:bno", (req, res) => {
-  const {bno} = req.params;
+  const param = {bno: req.params.bno}
 
-  const sqlQuery = `UPDATE tbl_restaurants SET available = 'N' WHERE bno = ${bno}`;
+  const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'deleteREstaurant', param, format);
 
   db.query(sqlQuery, (err, result) => {
     res.send(result);
@@ -119,16 +134,17 @@ app.post("/api/deleteRestaurant/:bno", (req, res) => {
 // createReview::POST
 // 리뷰 등록
 app.post("/api/createReview", async (req, res) => {
-  let data = [
-    bno = req.body.bno,
-    restaurant = req.body.restaurant,
-    content = req.body.content,
-    rating = req.body.rating
-  ];
+  const param = {
+    bno: req.body.bno,
+    restaurant: req.body.restaurant,
+    review: req.body.content,
+    rating: req.body.rating
+  };
 
   // 등록
-  const sqlQuery = "INSERT INTO tbl_reviews (bno, restaurant, review, rating) VALUES (?, ?, ?, ?);"
-  db.query(sqlQuery, data, (err, result) => {
+  const sqlQuery = mybatisMapper.getStatement('reviewMapper', 'insertReview', param, format);
+
+  db.query(sqlQuery, (err, result) => {
     if (err) {
       console.log("ERROR::", err);
     } else {
@@ -139,9 +155,10 @@ app.post("/api/createReview", async (req, res) => {
 
   // 별점 평균 구하기
   async function getAvgRating() {
-    let sqlQuery2 = `SELECT ROUND(AVG(rating), 1) as rating FROM tbl_reviews WHERE bno='${data[0]}'`
+    const param = {bno: req.body.bno}
+    const sqlQuery = mybatisMapper.getStatement('reviewMapper', 'selectReviewAvg', param, format);
 
-    db.query(sqlQuery2, (err, result) => {
+    db.query(sqlQuery, (err, result) => {
       if (err) {
         console.log("ERROR::", err);
       } else {
@@ -153,8 +170,14 @@ app.post("/api/createReview", async (req, res) => {
 
   // 해당 식당 별점 -> 별점평균으로 수정
   function setAvgRating(rating) {
-    let sqlQuery3 = `UPDATE tbl_restaurants SET rating = ${rating} WHERE bno='${data[0]}'`;
-    db.query(sqlQuery3, (err, result) => {
+    const param = {
+      bno: req.body.bno,
+      rating: rating
+    }
+
+    const sqlQuery = mybatisMapper.getStatement('reviewMapper', 'updateReviewAvg', param, format);
+
+    db.query(sqlQuery, (err, result) => {
       if (err) {
         console.log("ERROR::", err);
       } else {
@@ -167,22 +190,26 @@ app.post("/api/createReview", async (req, res) => {
 // reviewList::GET
 // 리뷰 목록 출력
 app.get("/api/reviewList/:bno", async function(req, res) {
-  const {bno} = req.params;
+  const param = {bno: req.params.bno};
+  const sqlQuery = mybatisMapper.getStatement('reviewMapper', 'selectReviewList', param, format);
 
-  const sqlQuery = `SELECT rno, restaurant, bno, rating, review, DATE_FORMAT(regdate, "%Y-%m-%d") as regdate
-                     FROM tbl_reviews WHERE bno=${bno} AND available='Y' ORDER BY rno desc`;
 
   db.query(sqlQuery, (err, result) => {
-    res.send(result);
+    if (err) {
+      console.log("ERROR::", err)
+    } else {
+      res.send(result);
+    }
   });
 });
 
 // reviewChart::GET
 // 리뷰 별점 차트
 app.get("/api/reviewChart/:bno", async function(req, res) {
-  const {bno} = req.params;
+  const param = {bno: req.params.bno};
   const keys = ['rating', 'count'];
   let ratingCount = [{}, {}, {}, {}, {}];
+
   for (var i=0; i<5; i++) {
     ratingCount[i][keys[0]] = i+1;
     ratingCount[i][keys[1]] = 0;
@@ -190,7 +217,7 @@ app.get("/api/reviewChart/:bno", async function(req, res) {
 
   let count = [];
 
-  const sqlQuery = `SELECT rating, COUNT(*) as count FROM tbl_reviews WHERE bno=${bno} GROUP BY rating ORDER BY rating ASC`;
+  const sqlQuery = mybatisMapper.getStatement('reviewMapper', 'selectRatingCount', param, format);
 
   db.query(sqlQuery, (err, result) => {
     if (err) {

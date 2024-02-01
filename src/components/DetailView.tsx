@@ -32,7 +32,7 @@ const DetailView = () => {
                 setDetail({
                     restaurant: data[0].restaurant,
                     address: data[0].address,
-                    photo: location.origin + data[0].photo,
+                    photo: 'https://localhost:3000/restaurant' + data[0].photo,
                 });
             });
     }, []);

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reviewMapper">
+
+    <select id="selectReviewList">
+        SELECT 
+            rno, 
+            restaurant, 
+            bno, 
+            rating, 
+            review, 
+            DATE_FORMAT(regdate, "%Y-%m-%d") as regdate
+        FROM tbl_reviews 
+        WHERE 
+            bno = #{bno} 
+            AND available = 'Y' 
+        ORDER BY rno desc
+    </select>
+
+    <select id="selectRatingCount">
+        SELECT 
+            rating, 
+            COUNT(*) as count 
+        FROM tbl_reviews 
+        WHERE bno = #{bno} 
+        GROUP BY rating 
+        ORDER BY rating ASC
+    </select>
+
+    <insert id="insertReview">
+        INSERT INTO tbl_reviews (
+            bno, 
+            restaurant, 
+            review, 
+            rating
+        ) VALUES (
+            #{bno},
+            #{restaurant},
+            #{review}, 
+            #{rating}
+        )
+    </insert>
+
+    <select id="selectReviewAvg">
+        SELECT ROUND(AVG(rating), 1) as rating 
+        FROM tbl_reviews 
+        WHERE bno = #{bno}
+    </select>
+
+    <update id="updateReviewAvg">
+        UPDATE tbl_restaurants 
+        SET 
+            rating = #{rating} 
+        WHERE bno = #{bno}
+    </update>
+
+</mapper>
