@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
+    "csv-loader": "^3.0.5",
     "dotenv": "^16.3.1",
     "dotenv-webpack": "^8.0.1",
     "env-cmd": "^10.1.0",
@@ -51,7 +52,8 @@
     "web-vitals": "^2.1.4",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "xml-loader": "^1.2.1"
   },
   "scripts": {
     "start": "nodemon ./server/index.js",

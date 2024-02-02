@@ -49,6 +49,10 @@ module.exports = {
                 exclude: /node_modules/,
                 use: ['file-loader?name=[name].[ext]'],
             },
+            {
+                test: /\.xml$/i,
+                use: ['xml-loader'],
+            },
         ],
     },
     plugins: [
