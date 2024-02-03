@@ -1,14 +1,13 @@
 const cors = require('cors');
 const express = require("express");
 const bodyParser = require('body-parser');
-const path = require('path');
 const history = require('connect-history-api-fallback');
 
 const db = require('./dbPool.js');
 const mybatisMapper = require('mybatis-mapper');
 const fileUpload = require('./fileUpload.js');
 const uploadImage = fileUpload;
-const mapperPath = '../reviewmanagement/src/resources/mappers';
+const mapperPath = './src/resources/mappers';
 
 const app = express();
 
@@ -36,7 +35,7 @@ mybatisMapper.createMapper(
   [`${mapperPath}/restaurantMapper.xml`,
   `${mapperPath}/reviewMapper.xml`]);
 
-  const format = {language: 'sql', indent: ' '};
+const format = {language: 'sql', indent: ' '};
 
 // restaurantList::GET
 // 식당 목록 출력
@@ -86,7 +85,7 @@ app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
   const sqlQuery = mybatisMapper.getStatement('restaurantMapper', 'insertRestaurant', param, format);
 
   db.query(sqlQuery, (err, result) => {
-    if (result != undefined) {
+    if (result !== undefined) {
       res.send(result);
     } else {
       res.send();
@@ -234,6 +233,6 @@ app.get("/api/reviewChart/:bno", async function(req, res) {
       }
 
       res.send(count);
-    };
+    }
   })
 });
