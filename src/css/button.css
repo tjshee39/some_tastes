@@ -1,0 +1,18 @@
+.button {
+    font-family: 'gureumgothic50';
+    border: 1px solid #ffd02e;
+    background: #ffd02e;
+    padding: 0.25rem 1rem;
+    cursor: pointer;
+    border-radius: 0.5em;
+}
+
+.button:hover,
+.button:active {
+    box-shadow: 0 2px 4px #7a7a76;
+    background: #f8bd11;
+}
+
+.button:focus {
+    outline: none;
+}
