@@ -1,15 +1,21 @@
+import React from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import Axios from 'axios';
 import '../App.css';
 import '../css/fonts.css';
-import $ from 'jquery';
-import React from 'react';
-import { Component, useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/postRestaurant.css';
 import restaurant from '../assets/images/restaurant.png';
 import address from '../assets/images/location.png';
-import Axios from 'axios';
-import { useParams } from 'react-router-dom';
 import defaultImage from '../assets/images/default_image.png';
+import Modal from '../components/common/Modal';
+
+interface ModalInfo {
+    title: string;
+    message: string;
+    onConfirm: () => void;
+}
 
 // 허용가능한 확장자 목록
 const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png';
@@ -48,6 +54,27 @@ const PostRestaurant = () => {
     const status = useParams().status;
     const API_BASE_URL = process.env.REACT_APP_HOME_URL;
 
+    const onConfirm = () => {
+        setModalShow(false);
+    };
+
+    const [modalShow, setModalShow] = useState(false);
+    const [modalInfo, setModalInfo] = useState<ModalInfo>({
+        title: '',
+        message: '',
+        onConfirm: onConfirm,
+    });
+
+    const setModalData = (title: string, message: string, onConfirm: () => void) => {
+        setModalInfo({
+            title: title,
+            message: message,
+            onConfirm: onConfirm,
+        });
+
+        setModalShow(true);
+    }
+
     const [detail, setDetail] = useState({
         restaurant: '',
         photo: defaultImage,
@@ -63,6 +90,11 @@ const PostRestaurant = () => {
     const [imageUrl, setImageUrl] = useState<any>(null);
     const imageRef = useRef<any>(null);
 
+    const [txtRestaurant, setTxtRestaurant] = useState('');
+    const [restaurantReadOnly, setRestaurantReadOnly] = useState(false);
+    const [txtAddress, setTxtAddress] = useState('주소를 입력하세요');
+    const [btnTitle, setBtnTitle] = useState('등록');
+
     useEffect(() => {
         if (status != 'create') {
             Axios.get(`/api/restaurantDetail/${status}`)
@@ -76,10 +108,10 @@ const PostRestaurant = () => {
                         address: data.address,
                     });
 
-                    $('#input_restaurant').val(data.restaurant);
-                    $('#input_restaurant').attr('readonly', 'true');
-                    $('#input_address').attr('placeholder', data.address);
-                    $('#btn_post').text('수정');
+                    setTxtRestaurant(data.restaurant);
+                    setRestaurantReadOnly(true);
+                    setTxtAddress(data.address);
+                    setBtnTitle('수정');
                 });
         }
     }, []);
@@ -104,7 +136,10 @@ const PostRestaurant = () => {
             // 파일 확장자 체크
             if (!fileExtensionValid(file)) {
                 file.value = '';
-                alert(`이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`);
+                const title:string = '알림';
+                const message:string = `이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`;
+
+                setModalData(title, message, onConfirm);
 
                 return;
             }
@@ -112,7 +147,10 @@ const PostRestaurant = () => {
             // 파일 용량 체크
             if (file.size > FILE_SIZE_MAX_LIMIT) {
                 file.value = '';
-                alert('업로드 가능한 최대 용량은 5MB 입니다.');
+                const title:string = '알림';
+                const message:string = '업로드 가능한 최대 용량은 5MB 입니다.';
+
+                setModalData(title, message, onConfirm);
 
                 return;
             }
@@ -136,7 +174,7 @@ const PostRestaurant = () => {
         return (
             <>
                 <form className="form_photo" encType="multipart/form-data">
-                    <img src={imageUrl ? imageUrl : detail.photo} className="select_img" />
+                    <img src={imageUrl ? imageUrl : detail.photo} className="select_img" alt='선택한 이미지'/>
                     <label htmlFor="file">이미지 업로드</label>
                     <input
                         className="btn_img_upload"
@@ -154,19 +192,28 @@ const PostRestaurant = () => {
 
     const validCheck = (restaurant: string, address: string, photo: string) => {
         if (restaurant === '') {
-            alert('식당명을 입력해주세요.');
+            const title:string = '알림';
+            const message:string = '식당명을 입력해주세요.';
+
+            setModalData(title, message, onConfirm);
 
             return false;
         }
 
         if (address === '') {
-            alert('식당 위치를 입력해주세요.');
+            const title:string = '알림';
+            const message:string = '식당 위치를 입력해주세요.';
+
+            setModalData(title, message, onConfirm);
 
             return false;
         }
 
         if (photo === '/default_image.png') {
-            alert('식당 이미지를 등록해주세요.');
+            const title:string = '알림';
+            const message:string = '식당 이미지를 등록해주세요.';
+
+            setModalData(title, message, onConfirm);
 
             return false;
         }
@@ -195,15 +242,25 @@ const PostRestaurant = () => {
                     .then((data) => {
                         const count = data.COUNT;
                         if (count != 0) {
-                            alert('이미 등록된 음식점입니다.');
+                            const title:string = '알림';
+                            const message:string = '이미 등록된 음식점입니다.';
+
+                            setModalData(title, message, onConfirm);
                         } else {
                             Axios.post('/api/createRestaurant', formData, config)
                                 .then((res) => {
                                     if (res.data != 'undefined') {
-                                        alert('음식점 등록 완료');
+                                        const title:string = '알림';
+                                        const message:string = '음식점 등록 완료';
+
+                                        setModalData(title, message, onConfirm);
+
                                         location.href = '/';
                                     } else {
-                                        alert('동일한 음식점이 등록되어있습니다.');
+                                        const title:string = '알림';
+                                        const message:string = '동일한 음식점이 등록되어있습니다.';
+
+                                        setModalData(title, message, onConfirm);
                                     }
                                 })
                                 .catch((e) => {
@@ -214,7 +271,10 @@ const PostRestaurant = () => {
             } else {
                 Axios.post(`/api/updateRestaurant/${status}`, formData, config)
                     .then((res) => {
-                        alert('음식점 수정 완료');
+                        const title:string = '알림';
+                        const message:string = '음식점 수정 완료';
+
+                        setModalData(title, message, onConfirm);
 
                         location.href = `/restaurantDetail/${status}`;
                     })
@@ -227,13 +287,21 @@ const PostRestaurant = () => {
 
     return (
         <>
+            {modalShow && (
+                <Modal
+                    title={modalInfo.title}
+                    message={modalInfo.message}
+                    onConfirm={modalInfo.onConfirm}
+                />
+            )}
+
             <div className="App">
                 <div className="area_upload_img">
                     <SelectImage />
                 </div>
                 <div className="area_restaurant">
                     <div>
-                        <img src={restaurant} className="img_restaurant" />
+                        <img src={restaurant} className="img_restaurant" alt='식당'/>
                     </div>
                     <form className="form_restaurant">
                         <input
@@ -243,12 +311,14 @@ const PostRestaurant = () => {
                             name="restaurant"
                             onChange={handleChange}
                             placeholder="음식점을 입력하세요"
+                            value={txtRestaurant}
+                            readOnly={restaurantReadOnly}
                         />
                     </form>
                 </div>
                 <div className="area_address">
                     <div>
-                        <img src={address} className="img_address" />
+                        <img src={address} className="img_address" alt='주소아이콘'/>
                     </div>
                     <form className="form_address">
                         <input
@@ -256,14 +326,18 @@ const PostRestaurant = () => {
                             className="input_box"
                             type="text"
                             name="address"
-                            placeholder="주소를 입력하세요"
+                            placeholder={txtAddress}
                             onChange={handleChange}
                         />
                     </form>
                 </div>
                 <div className="area_btn">
-                    <button className="btn_restaurant_register" onClick={post} id="btn_post">
-                        등록
+                    <button
+                        className="btn_restaurant_register"
+                        onClick={post}
+                        id="btn_post"
+                    >
+                        { btnTitle }
                     </button>
                 </div>
             </div>
