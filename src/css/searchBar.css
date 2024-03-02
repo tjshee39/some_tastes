@@ -1,0 +1,32 @@
+.search_bar {
+    border: none;
+    width: 300px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 1.1rem;
+    line-height: 3rem;
+}
+
+.area_search_bar {
+    border-top: none;
+    border-bottom: 1px solid grey;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.btn_search {
+    border: none;
+    background-color: transparent;
+}
+
+.btn_search img {
+    width: 30px;
+    height: 30px;
+}
+
+@media all and (max-width: 770px) {
+    .search_bar {
+        width: 200px;
+    }
+}

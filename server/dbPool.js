@@ -18,4 +18,4 @@ db.getConnection(function(err, conn) {
     }
 })
 
-  module.exports = db;
+module.exports = db;

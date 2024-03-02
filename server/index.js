@@ -1,5 +1,6 @@
 const cors = require('cors');
 const express = require("express");
+const request = require('request');
 const bodyParser = require('body-parser');
 const history = require('connect-history-api-fallback');
 
@@ -12,6 +13,8 @@ const mapperPath = './src/resources/mappers';
 const app = express();
 
 const PORT = process.env.port || 8000;
+const clientId = process.env.NAVER_SEARCH_API_ID;
+const clientSecret = process.env.NAVER_SEARCH_API_SECRET;
 
 const corsOptions = {
   origin: "*", // 출처 허용 옵션
@@ -89,6 +92,45 @@ app.post("/api/createRestaurant", uploadImage.single('photo'), (req, res) => {
       res.send(result);
     } else {
       res.send();
+    }
+  });
+});
+
+// searchRestaurantInfo::GET
+// 식당 등록시 식당정보 검색
+app.get("/api/searchRestaurant", async function (req, res) {
+  const param = req.query
+  const keyword = param.area + param.subArea + param.keyword
+
+  const apiUrl
+      = 'https://openapi.naver.com/v1/search/local.json?query='    // json 결과
+      + encodeURI(keyword)
+      + '&display=5&start='
+      + req.query.page
+      + '&sort=random'
+
+  const options = {
+    url: apiUrl,
+    headers: {
+      'X-Naver-Client-Id': clientId,
+      'X-Naver-Client-Secret': clientSecret
+    }
+  };
+
+  request.get(options, function (err, response, body) {
+    const jsonBody = JSON.parse(body)
+
+    if (!err && response.statusCode === 200) {
+      const result = jsonBody.items.filter(data => data.roadAddress && data.title).map(data => ({
+        title: data.title,
+        roadAddress: data.roadAddress
+      }))
+
+      res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
+      res.end(JSON.stringify(result));
+    } else {
+      res.status(response.statusCode).end();
+      console.log('err::', response.statusCode);
     }
   });
 });

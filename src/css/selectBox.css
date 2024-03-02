@@ -1,0 +1,43 @@
+.select_box {
+
+}
+
+.select_box label {
+    text-align: center;
+}
+
+.select_box::before {
+    content: "⌵";
+    float: right;
+}
+
+.select_box ul {
+    padding: 0;
+    list-style: none;
+    overflow: overlay;
+    position: absolute;
+    height: 250px;
+    z-index: 99;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+    width: max-content;
+}
+
+.select_box ul::-webkit-scrollbar {
+    width: 6px;
+}
+.select_box ul::-webkit-scrollbar-thumb {
+    background-color: #ffd02e;
+}
+.select_box ul::-webkit-scrollbar-track {
+    background-color: #7a7a76;
+}
+
+.select_box ul li {
+    list-style: none;
+    padding: 6px 8px;
+    &:hover {
+        background-color: #fff0c2
+    }
+}

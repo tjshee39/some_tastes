@@ -9,11 +9,16 @@ import '../css/postRestaurant.css';
 import restaurant from '../assets/images/restaurant.png';
 import address from '../assets/images/location.png';
 import defaultImage from '../assets/images/default_image.png';
+import RestaurantSearchModal from '../components/RestaurantSearchModal';
 import Modal from '../components/common/Modal';
 
 interface ModalInfo {
     title: string;
     message: string;
+    onConfirm: () => void;
+}
+
+interface RestaurantSearchModalInfo {
     onConfirm: () => void;
 }
 
@@ -91,9 +96,18 @@ const PostRestaurant = () => {
     const imageRef = useRef<any>(null);
 
     const [txtRestaurant, setTxtRestaurant] = useState('');
-    const [restaurantReadOnly, setRestaurantReadOnly] = useState(false);
+    const [restaurantReadOnly, setRestaurantReadOnly] = useState<boolean>(false);
     const [txtAddress, setTxtAddress] = useState('주소를 입력하세요');
     const [btnTitle, setBtnTitle] = useState('등록');
+
+    const searchRestaurantDone = () => {
+        setRestaurantSearchModalShow(false)
+    }
+    const [restaurantSearchModalShow, setRestaurantSearchModalShow] = useState(false);
+    const [restaurantSearchModalInfo, setRestaurantSearchModalInfo]
+        = useState<RestaurantSearchModalInfo>({
+            onConfirm: searchRestaurantDone,
+        });
 
     useEffect(() => {
         if (status != 'create') {
@@ -118,6 +132,7 @@ const PostRestaurant = () => {
 
     const handleChange = (e: any) => {
         const { value, name } = e.target;
+        setTxtRestaurant(value);
 
         setDetail({
             ...detail,
@@ -235,39 +250,39 @@ const PostRestaurant = () => {
             };
 
             if (status == 'create') {
-                Axios.get('/api/existRestaurant', { params: { restaurant: detail.restaurant } })
-                    .then((res) => {
-                        return res.data[0];
-                    })
-                    .then((data) => {
-                        const count = data.COUNT;
-                        if (count != 0) {
-                            const title:string = '알림';
-                            const message:string = '이미 등록된 음식점입니다.';
+                Axios.get('/api/existRestaurant', {
+                    params: { restaurant: detail.restaurant }
+                }).then((res) => {
+                    return res.data[0];
+                }).then((data) => {
+                    const count = data.COUNT;
+                    if (count != 0) {
+                        const title:string = '알림';
+                        const message:string = '이미 등록된 음식점입니다.';
 
-                            setModalData(title, message, onConfirm);
-                        } else {
-                            Axios.post('/api/createRestaurant', formData, config)
-                                .then((res) => {
-                                    if (res.data != 'undefined') {
-                                        const title:string = '알림';
-                                        const message:string = '음식점 등록 완료';
+                        setModalData(title, message, onConfirm);
+                    } else {
+                        Axios.post('/api/createRestaurant', formData, config)
+                        .then((res) => {
+                            if (res.data != 'undefined') {
+                                const title:string = '알림';
+                                const message:string = '음식점 등록 완료';
 
-                                        setModalData(title, message, onConfirm);
+                                setModalData(title, message, onConfirm);
 
-                                        location.href = '/';
-                                    } else {
-                                        const title:string = '알림';
-                                        const message:string = '동일한 음식점이 등록되어있습니다.';
+                                location.href = '/';
+                            } else {
+                                const title:string = '알림';
+                                const message:string = '동일한 음식점이 등록되어있습니다.';
 
-                                        setModalData(title, message, onConfirm);
-                                    }
-                                })
-                                .catch((e) => {
-                                    console.error(e);
-                                });
-                        }
-                    });
+                                setModalData(title, message, onConfirm);
+                            }
+                        })
+                        .catch((e) => {
+                            console.error(e);
+                        });
+                    }
+                });
             } else {
                 Axios.post(`/api/updateRestaurant/${status}`, formData, config)
                     .then((res) => {
@@ -295,6 +310,12 @@ const PostRestaurant = () => {
                 />
             )}
 
+            {restaurantSearchModalShow && (
+                <RestaurantSearchModal
+                    onConfirm={restaurantSearchModalInfo.onConfirm}
+                />
+            )}
+
             <div className="App">
                 <div className="area_upload_img">
                     <SelectImage />
@@ -313,6 +334,7 @@ const PostRestaurant = () => {
                             placeholder="음식점을 입력하세요"
                             value={txtRestaurant}
                             readOnly={restaurantReadOnly}
+                            onClick={() => setRestaurantSearchModalShow(true)}
                         />
                     </form>
                 </div>

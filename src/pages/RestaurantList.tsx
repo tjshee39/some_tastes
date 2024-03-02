@@ -37,7 +37,7 @@ const RestaurantList = () => {
             <div className="area_btn">
                 <div className="board_create">
                     <Link to="/postRestaurant/create">
-                        <img src={pencil} className="btn_board_create" title="음식점 등록" />
+                        <img src={pencil} className="btn_board_create" title="음식점 등록" alt='등록'/>
                     </Link>
                 </div>
             </div>

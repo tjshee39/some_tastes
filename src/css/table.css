@@ -1,0 +1,81 @@
+.table > thead > tr > th {
+    text-align: center;
+    background-color: #ffd02e;
+}
+
+.table > thead > tr > th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.table > thead > tr > th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.table tr {
+    position: relative;
+    text-align: left;
+    background: #fff6d9;
+}
+
+.table tbody > tr::after {
+    content: ''; /* 가상 요소 내용 없음 */
+    position: absolute; /* 절대 위치 설정 */
+    bottom: 0; /* 아래쪽으로 이동하여 밑줄 위치 조정 */
+    left: 0; /* 왼쪽 정렬 */
+    width: 100%; /* 요소의 전체 너비 */
+    height: 1px; /* 밑줄의 두께 */
+    background: repeating-linear-gradient(to right, #7a7a76 0, #7a7a76 10px, transparent 10px, transparent 20px); /* 대쉬 패턴 */
+}
+
+.table tbody > tr:last-child::after {
+    content: ''; /* 가상 요소 내용 없음 */
+    position: absolute; /* 절대 위치 설정 */
+    height: 0;
+}
+
+.table > tbody > tr {
+    /*text-align: left;*/
+    /*background: #fff6d9;*/
+    /*border-style: dashed;*/
+    /*border-width: 0 0 1px 0;*/
+    /*border-image: linear-gradient(to right, transparent 30%, black 30%, black 70%, transparent 70%);*/
+    /*border-image-slice: 1;*/
+}
+
+.table {
+    width: 525px;
+    line-height: 1.7em;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.table > :not(caption) > * > * {
+    border-bottom: none;
+}
+
+.header_title {
+    width: 150px;
+}
+
+.header_road_address {
+    width: 350px;
+}
+
+.table_no_data {
+    text-align: center;
+}
+
+@media all and (max-width: 770px){
+    .table {
+        width: 425px;
+        font-size: 14px;
+    }
+
+    .header_title {
+        width: 100px;
+    }
+
+    .header_road_address {
+        width: 300px;
+    }
+}

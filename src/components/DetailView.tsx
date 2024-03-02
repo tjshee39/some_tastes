@@ -11,6 +11,8 @@ import RivewList from './ReviewList';
 import ReviewChart from './ReviewChart';
 import Modal from '../components/common/Modal';
 
+const REACT_APP_HOME_URL: string | undefined = process.env.REACT_APP_HOME_URL;
+
 interface ModalInfo {
     title: string;
     message: string;
@@ -50,7 +52,7 @@ const DetailView = () => {
     const getRestaurantDetail = () => {
         Axios.get(`/api/restaurantDetail/${bno}`)
         .then((res) => {
-            console.log('res:::', res.data);
+            res.data[0].photo = REACT_APP_HOME_URL + res.data[0].photo
             return res.data;
         })
         .then((data) => {
