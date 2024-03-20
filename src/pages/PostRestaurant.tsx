@@ -6,8 +6,8 @@ import '../App.css';
 import '../css/fonts.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/postRestaurant.css';
-import restaurant from '../assets/images/restaurant.png';
-import address from '../assets/images/location.png';
+import restaurantIcon from '../assets/images/restaurant.png';
+import addressIcon from '../assets/images/location.png';
 import defaultImage from '../assets/images/default_image.png';
 import RestaurantSearchModal from '../components/RestaurantSearchModal';
 import Modal from '../components/common/Modal';
@@ -20,6 +20,12 @@ interface ModalInfo {
 
 interface RestaurantSearchModalInfo {
     onConfirm: () => void;
+    setRestaurantInfo: (data: RestaurantInfo) => void;
+}
+
+interface RestaurantInfo {
+    title: string;
+    roadAddress: string;
 }
 
 // 허용가능한 확장자 목록
@@ -59,15 +65,19 @@ const PostRestaurant = () => {
     const status = useParams().status;
     const API_BASE_URL = process.env.REACT_APP_HOME_URL;
 
-    const onConfirm = () => {
+    const onConfirm = (url?: string) => {
         setModalShow(false);
+
+        if (typeof(url) === 'string') {
+            location.href = url;
+        }
     };
 
     const [modalShow, setModalShow] = useState(false);
     const [modalInfo, setModalInfo] = useState<ModalInfo>({
         title: '',
         message: '',
-        onConfirm: onConfirm,
+        onConfirm: () => onConfirm(),
     });
 
     const setModalData = (title: string, message: string, onConfirm: () => void) => {
@@ -80,12 +90,9 @@ const PostRestaurant = () => {
         setModalShow(true);
     }
 
-    const [detail, setDetail] = useState({
-        restaurant: '',
-        photo: defaultImage,
-        address: '',
-        // fileName: '',
-    });
+    const [restaurant, setRestaurant] = useState<String>('')
+    const [address, setAddress] = useState<String>('')
+    const [photo, setPhoto] = useState<String>(defaultImage)
 
     const [fileInfo, setFile] = useState({
         file: '',
@@ -97,17 +104,27 @@ const PostRestaurant = () => {
 
     const [txtRestaurant, setTxtRestaurant] = useState('');
     const [restaurantReadOnly, setRestaurantReadOnly] = useState<boolean>(false);
-    const [txtAddress, setTxtAddress] = useState('주소를 입력하세요');
+    const [txtAddress, setTxtAddress] = useState('');
     const [btnTitle, setBtnTitle] = useState('등록');
 
     const searchRestaurantDone = () => {
         setRestaurantSearchModalShow(false)
     }
+
+    const setRestaurantInfo = (data: RestaurantInfo) => {
+        setTxtRestaurant(data.title)
+        setTxtAddress(data.roadAddress)
+
+        setRestaurant(data.title)
+        setAddress(data.roadAddress)
+    }
+
     const [restaurantSearchModalShow, setRestaurantSearchModalShow] = useState(false);
     const [restaurantSearchModalInfo, setRestaurantSearchModalInfo]
         = useState<RestaurantSearchModalInfo>({
-            onConfirm: searchRestaurantDone,
-        });
+        onConfirm: searchRestaurantDone,
+        setRestaurantInfo: setRestaurantInfo
+    });
 
     useEffect(() => {
         if (status != 'create') {
@@ -116,11 +133,10 @@ const PostRestaurant = () => {
                     return res.data[0];
                 })
                 .then((data) => {
-                    setDetail({
-                        restaurant: data.restaurant,
-                        photo: API_BASE_URL + data.photo,
-                        address: data.address,
-                    });
+
+                    setRestaurant(data.restaurant)
+                    setPhoto(API_BASE_URL + data.photo)
+                    setAddress(data.address)
 
                     setTxtRestaurant(data.restaurant);
                     setRestaurantReadOnly(true);
@@ -132,12 +148,14 @@ const PostRestaurant = () => {
 
     const handleChange = (e: any) => {
         const { value, name } = e.target;
-        setTxtRestaurant(value);
 
-        setDetail({
-            ...detail,
-            [name]: value,
-        });
+        if (name === 'restaurant') {
+            setTxtRestaurant(value);
+            setRestaurant(value)
+        } else if (name === 'address') {
+            setTxtAddress(value)
+            setAddress(value)
+        }
     };
 
     const SelectImage = (props: any) => {
@@ -179,17 +197,14 @@ const PostRestaurant = () => {
                     fileName: e.target.value,
                 });
 
-                setDetail({
-                    ...detail,
-                    photo: e.target.value,
-                });
+                setPhoto(e.target.value)
             };
         };
 
         return (
             <>
                 <form className="form_photo" encType="multipart/form-data">
-                    <img src={imageUrl ? imageUrl : detail.photo} className="select_img" alt='선택한 이미지'/>
+                    <img src={imageUrl ? imageUrl : photo} className="select_img" alt='선택한 이미지'/>
                     <label htmlFor="file">이미지 업로드</label>
                     <input
                         className="btn_img_upload"
@@ -237,21 +252,24 @@ const PostRestaurant = () => {
     };
 
     const post = () => {
-        if (validCheck(detail.restaurant, detail.address, detail.photo)) {
+        if (validCheck(restaurant, address, photo)) {
             const formData = new FormData();
-            formData.append('restaurant', detail.restaurant);
-            formData.append('address', detail.address);
+            const restaurantImg =
+                status == 'create' ? photo : '/photo/' + photo.split('/photo/')[1]
+
+            formData.append('restaurant', restaurant);
+            formData.append('address', address);
             formData.append('photo', fileInfo.file);
-            formData.append('existingPhoto', detail.photo);
+            formData.append('existingPhoto', restaurantImg);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data',
                 },
             };
 
-            if (status == 'create') {
+            if (status === 'create') {
                 Axios.get('/api/existRestaurant', {
-                    params: { restaurant: detail.restaurant }
+                    params: { restaurant: restaurant }
                 }).then((res) => {
                     return res.data[0];
                 }).then((data) => {
@@ -263,24 +281,22 @@ const PostRestaurant = () => {
                         setModalData(title, message, onConfirm);
                     } else {
                         Axios.post('/api/createRestaurant', formData, config)
-                        .then((res) => {
-                            if (res.data != 'undefined') {
-                                const title:string = '알림';
-                                const message:string = '음식점 등록 완료';
+                            .then((res) => {
+                                if (res.data != 'undefined') {
+                                    const title:string = '알림';
+                                    const message:string = '음식점 등록 완료';
 
-                                setModalData(title, message, onConfirm);
+                                    setModalData(title, message, () => onConfirm('/'));
+                                } else {
+                                    const title:string = '알림';
+                                    const message:string = '동일한 음식점이 등록되어있습니다.';
 
-                                location.href = '/';
-                            } else {
-                                const title:string = '알림';
-                                const message:string = '동일한 음식점이 등록되어있습니다.';
-
-                                setModalData(title, message, onConfirm);
-                            }
-                        })
-                        .catch((e) => {
-                            console.error(e);
-                        });
+                                    setModalData(title, message, onConfirm);
+                                }
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                            });
                     }
                 });
             } else {
@@ -289,9 +305,7 @@ const PostRestaurant = () => {
                         const title:string = '알림';
                         const message:string = '음식점 수정 완료';
 
-                        setModalData(title, message, onConfirm);
-
-                        location.href = `/restaurantDetail/${status}`;
+                        setModalData(title, message, () => onConfirm(`/restaurantDetail/${status}`));
                     })
                     .catch((e) => {
                         console.error(e);
@@ -313,6 +327,7 @@ const PostRestaurant = () => {
             {restaurantSearchModalShow && (
                 <RestaurantSearchModal
                     onConfirm={restaurantSearchModalInfo.onConfirm}
+                    handleRowOnClick={restaurantSearchModalInfo.setRestaurantInfo}
                 />
             )}
 
@@ -322,7 +337,7 @@ const PostRestaurant = () => {
                 </div>
                 <div className="area_restaurant">
                     <div>
-                        <img src={restaurant} className="img_restaurant" alt='식당'/>
+                        <img src={restaurantIcon} className="img_restaurant" alt='식당'/>
                     </div>
                     <form className="form_restaurant">
                         <input
@@ -334,13 +349,14 @@ const PostRestaurant = () => {
                             placeholder="음식점을 입력하세요"
                             value={txtRestaurant}
                             readOnly={restaurantReadOnly}
+                            disabled={restaurantReadOnly}
                             onClick={() => setRestaurantSearchModalShow(true)}
                         />
                     </form>
                 </div>
                 <div className="area_address">
                     <div>
-                        <img src={address} className="img_address" alt='주소아이콘'/>
+                        <img src={addressIcon} className="img_address" alt='주소아이콘'/>
                     </div>
                     <form className="form_address">
                         <input
@@ -348,7 +364,8 @@ const PostRestaurant = () => {
                             className="input_box"
                             type="text"
                             name="address"
-                            placeholder={txtAddress}
+                            placeholder="주소를 입력하세요"
+                            value={txtAddress}
                             onChange={handleChange}
                         />
                     </form>

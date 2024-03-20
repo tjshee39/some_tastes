@@ -16,6 +16,7 @@ interface TableData {
     pageIndex: number;
     totalCnt: number;
     handlePageChange: (page :number) => void;
+    handleRowOnClick: (data: any) => void;
 }
 
 const Table = (props: TableData) => {
@@ -30,6 +31,10 @@ const Table = (props: TableData) => {
         rows,
         prepareRow
     } = useTable({ columns, data });
+
+    const handleRowOnClick = (data: any) => {
+        props.handleRowOnClick(data);
+    }
 
     const handlePageChange = (page: number) => {
         setPage(page);
@@ -59,7 +64,7 @@ const Table = (props: TableData) => {
                 {rows.map((row) => {
                     prepareRow(row);
                     return (
-                        <tr {...row.getRowProps()}>
+                        <tr {...row.getRowProps()} onClick={() => handleRowOnClick(row.cells[0].row.values)}>
                             {row.cells.map((cell) => {
                                 return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                             })}

@@ -16,7 +16,8 @@
     list-style: none;
     overflow: overlay;
     position: absolute;
-    height: 250px;
+    height: auto;
+    max-height: 200px;
     z-index: 99;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);

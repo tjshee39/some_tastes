@@ -157,7 +157,6 @@ app.post("/api/updateRestaurant/:bno", uploadImage.single('photo'), (req, res) =
   db.query(sqlQuery, (err, result) => {
     res.send(result);
   });
-  
 });
 
 // deleteRestaurant::POST

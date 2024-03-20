@@ -12,11 +12,17 @@ import Axios from 'axios';
 
 interface ModalInfo {
     onConfirm: () => void;
+    handleRowOnClick: (data: RestaurantInfo) => void;
 }
 
 interface Sigungu {
     name: string;
     subArea: string[];
+}
+
+interface RestaurantInfo {
+    title: string;
+    roadAddress: string;
 }
 
 const RestaurantSearchModalOverlay = (props: ModalInfo) => {
@@ -70,6 +76,11 @@ const RestaurantSearchModalOverlay = (props: ModalInfo) => {
 
     const handleChangePage = (page: number) => {
         setPage(page)
+    }
+
+    const handleRowOnClick = (data: RestaurantInfo) => {
+        props.handleRowOnClick(data)
+        props.onConfirm()
     }
 
     const replaceHtmlTag = (htmlString: string) => {
@@ -130,11 +141,12 @@ const RestaurantSearchModalOverlay = (props: ModalInfo) => {
                     pageIndex={1}
                     totalCnt={searchResultList.length}
                     handlePageChange={handleChangePage}
+                    handleRowOnClick={handleRowOnClick}
                 />
             </div>
             <footer className="actions">
                 <Button type="button" onClick={props.onConfirm}>
-                    확인
+                    닫기
                 </Button>
             </footer>
         </Card>
@@ -149,6 +161,7 @@ const RestaurantSearchModal = (props: ModalInfo) => {
             {ReactDom.createPortal(
                 <RestaurantSearchModalOverlay
                     onConfirm={props.onConfirm}
+                    handleRowOnClick={props.handleRowOnClick}
                 />,
                 overlayRoot,
             )}
