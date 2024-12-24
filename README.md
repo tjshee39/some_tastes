@@ -43,7 +43,10 @@ NAVER_SEARCH_API_SECRET=naver_search_api_secret
 #### 📌음식점 등록
 <p align="center">
   <img src="https://user-images.githubusercontent.com/55904021/209618954-5cda8f0a-12c2-4d3d-90b3-98f13e002717.png"/>
+  <img width="870" alt="image" src="https://github.com/user-attachments/assets/7ac0783d-44cb-41a5-bfb4-ce0c0ef555ef" />
+  <img width="870" alt="image" src="https://github.com/user-attachments/assets/ece3be83-ade9-4440-8652-2fc4251a0fc9" />
 </p>
+- 움삭점 이름으로 검색 및 선택
 
 - 음식점 이름, 주소, 이미지(한장) 입력
 
