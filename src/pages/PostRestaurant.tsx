@@ -1,387 +1,382 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import Axios from 'axios';
-import '../App.css';
-import '../css/fonts.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../css/postRestaurant.css';
-import restaurantIcon from '../assets/images/restaurant.png';
-import addressIcon from '../assets/images/location.png';
-import defaultImage from '../assets/images/default_image.png';
-import RestaurantSearchModal from '../components/RestaurantSearchModal';
-import Modal from '../components/common/Modal';
+import React, { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import Axios from 'axios'
+import '../App.css'
+import '../css/fonts.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../css/postRestaurant.css'
+import restaurantIcon from '../assets/images/restaurant.png'
+import addressIcon from '../assets/images/location.png'
+import defaultImage from '../assets/images/default_image.png'
+import RestaurantSearchModal from '../components/RestaurantSearchModal'
+import Modal from '../components/common/Modal'
 
 interface ModalInfo {
-    title: string;
-    message: string;
-    onConfirm: () => void;
+  title: string
+  message: string
+  onConfirm: () => void
 }
 
 interface RestaurantSearchModalInfo {
-    onConfirm: () => void;
-    setRestaurantInfo: (data: RestaurantInfo) => void;
+  onConfirm: () => void
+  setRestaurantInfo: (data: RestaurantInfo) => void
 }
 
 interface RestaurantInfo {
-    title: string;
-    roadAddress: string;
+  title: string
+  roadAddress: string
 }
 
 // 허용가능한 확장자 목록
-const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png';
-const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024; // 5MB
+const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png'
+const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024 // 5MB
 
 // 파일명으로부터 확장자 반환
 const removeFileName = (originalFileName: string): string => {
-    // 마지막 '.'의 위치를 통해 확장자 확인
-    const lastIndex = originalFileName.lastIndexOf('.');
+  // 마지막 '.'의 위치를 통해 확장자 확인
+  const lastIndex = originalFileName.lastIndexOf('.')
 
-    // 파일 이름에 '.'이 존재하지 않음
-    if (lastIndex < 0) {
-        return '';
-    }
+  // 파일 이름에 '.'이 존재하지 않음
+  if (lastIndex < 0) {
+    return ''
+  }
 
-    // 마지막 '.'부터 파일명(문자열)의 끝부분까지 잘라 확장자 구함
-    // 확장자를 소문자로 변경
-    return originalFileName.substring(lastIndex + 1).toLowerCase();
-};
+  // 마지막 '.'부터 파일명(문자열)의 끝부분까지 잘라 확장자 구함
+  // 확장자를 소문자로 변경
+  return originalFileName.substring(lastIndex + 1).toLowerCase()
+}
 
 // 선택한 파일의 확장자가 업로드 가능한지 확인
 const fileExtensionValid = ({ name }: { name: string }): boolean => {
-    // 파일 확장자
-    const extension = removeFileName(name);
+  // 파일 확장자
+  const extension = removeFileName(name)
 
-    // const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png';
-    // 선택한 파일의 확장자가 'ALLOW_FILE_EXTENSION'에 포함되지 않음
-    if (!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === '') {
-        return false;
-    }
-    // 업로드 가능한 파일
-    return true;
-};
+  // const ALLOW_FILE_EXTENSION = 'jpg,jpeg,png';
+  // 선택한 파일의 확장자가 'ALLOW_FILE_EXTENSION'에 포함되지 않음
+  if (!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === '') {
+    return false
+  }
+  // 업로드 가능한 파일
+  return true
+}
 
 const PostRestaurant = () => {
-    const status = useParams().status;
-    const API_BASE_URL = process.env.REACT_APP_HOME_URL;
+  const status = useParams().status
+  const API_BASE_URL = process.env.REACT_APP_HOME_URL
 
-    const onConfirm = (url?: string) => {
-        setModalShow(false);
+  const onConfirm = (url?: string) => {
+    setModalShow(false)
 
-        if (typeof(url) === 'string') {
-            location.href = url;
-        }
-    };
-
-    const [modalShow, setModalShow] = useState(false);
-    const [modalInfo, setModalInfo] = useState<ModalInfo>({
-        title: '',
-        message: '',
-        onConfirm: () => onConfirm(),
-    });
-
-    const setModalData = (title: string, message: string, onConfirm: () => void) => {
-        setModalInfo({
-            title: title,
-            message: message,
-            onConfirm: onConfirm,
-        });
-
-        setModalShow(true);
+    if (typeof url === 'string') {
+      location.href = url
     }
+  }
 
-    const [restaurant, setRestaurant] = useState<String>('')
-    const [address, setAddress] = useState<String>('')
-    const [photo, setPhoto] = useState<String>(defaultImage)
+  const [modalShow, setModalShow] = useState(false)
+  const [modalInfo, setModalInfo] = useState<ModalInfo>({
+    title: '',
+    message: '',
+    onConfirm: () => onConfirm(),
+  })
 
-    const [fileInfo, setFile] = useState({
-        file: '',
-        fileName: '',
-    });
+  const setModalData = (title: string, message: string, onConfirm: () => void) => {
+    setModalInfo({
+      title: title,
+      message: message,
+      onConfirm: onConfirm,
+    })
 
-    const [imageUrl, setImageUrl] = useState<any>(null);
-    const imageRef = useRef<any>(null);
+    setModalShow(true)
+  }
 
-    const [txtRestaurant, setTxtRestaurant] = useState('');
-    const [restaurantReadOnly, setRestaurantReadOnly] = useState<boolean>(false);
-    const [txtAddress, setTxtAddress] = useState('');
-    const [btnTitle, setBtnTitle] = useState('등록');
+  const [restaurant, setRestaurant] = useState<String>('')
+  const [address, setAddress] = useState<String>('')
+  const [photo, setPhoto] = useState<String>(defaultImage)
 
-    const searchRestaurantDone = () => {
-        setRestaurantSearchModalShow(false)
+  const [fileInfo, setFile] = useState({
+    file: '',
+    fileName: '',
+  })
+
+  const [imageUrl, setImageUrl] = useState<any>(null)
+  const imageRef = useRef<any>(null)
+
+  const [txtRestaurant, setTxtRestaurant] = useState('')
+  const [restaurantReadOnly, setRestaurantReadOnly] = useState<boolean>(false)
+  const [txtAddress, setTxtAddress] = useState('')
+  const [btnTitle, setBtnTitle] = useState('등록')
+
+  const searchRestaurantDone = () => {
+    setRestaurantSearchModalShow(false)
+  }
+
+  const setRestaurantInfo = (data: RestaurantInfo) => {
+    setTxtRestaurant(data.title)
+    setTxtAddress(data.roadAddress)
+
+    setRestaurant(data.title)
+    setAddress(data.roadAddress)
+  }
+
+  const [restaurantSearchModalShow, setRestaurantSearchModalShow] = useState(false)
+  const [restaurantSearchModalInfo, setRestaurantSearchModalInfo] =
+    useState<RestaurantSearchModalInfo>({
+      onConfirm: searchRestaurantDone,
+      setRestaurantInfo: setRestaurantInfo,
+    })
+
+  useEffect(() => {
+    if (status != 'create') {
+      Axios.get(`/api/restaurantDetail/${status}`)
+        .then((res) => {
+          return res.data[0]
+        })
+        .then((data) => {
+          setRestaurant(data.restaurant)
+          setPhoto(API_BASE_URL + data.photo)
+          setAddress(data.address)
+
+          setTxtRestaurant(data.restaurant)
+          setRestaurantReadOnly(true)
+          setTxtAddress(data.address)
+          setBtnTitle('수정')
+        })
     }
+  }, [])
 
-    const setRestaurantInfo = (data: RestaurantInfo) => {
-        setTxtRestaurant(data.title)
-        setTxtAddress(data.roadAddress)
+  const handleChange = (e: any) => {
+    const { value, name } = e.target
 
-        setRestaurant(data.title)
-        setAddress(data.roadAddress)
+    if (name === 'restaurant') {
+      setTxtRestaurant(value)
+      setRestaurant(value)
+    } else if (name === 'address') {
+      setTxtAddress(value)
+      setAddress(value)
     }
+  }
 
-    const [restaurantSearchModalShow, setRestaurantSearchModalShow] = useState(false);
-    const [restaurantSearchModalInfo, setRestaurantSearchModalInfo]
-        = useState<RestaurantSearchModalInfo>({
-        onConfirm: searchRestaurantDone,
-        setRestaurantInfo: setRestaurantInfo
-    });
+  const SelectImage = (props: any) => {
+    // const [imageUrl, setImageUrl] = useState<any>(null);
+    // const imageRef = useRef<any>(null);
 
-    useEffect(() => {
-        if (status != 'create') {
-            Axios.get(`/api/restaurantDetail/${status}`)
-                .then((res) => {
-                    return res.data[0];
-                })
-                .then((data) => {
+    const onChangeImage = (e: any) => {
+      const reader = new FileReader()
+      const file = imageRef.current.files[0]
 
-                    setRestaurant(data.restaurant)
-                    setPhoto(API_BASE_URL + data.photo)
-                    setAddress(data.address)
+      // 파일 확장자 체크
+      if (!fileExtensionValid(file)) {
+        file.value = ''
+        const title: string = '알림'
+        const message: string = `이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`
 
-                    setTxtRestaurant(data.restaurant);
-                    setRestaurantReadOnly(true);
-                    setTxtAddress(data.address);
-                    setBtnTitle('수정');
-                });
-        }
-    }, []);
+        setModalData(title, message, onConfirm)
 
-    const handleChange = (e: any) => {
-        const { value, name } = e.target;
+        return
+      }
 
-        if (name === 'restaurant') {
-            setTxtRestaurant(value);
-            setRestaurant(value)
-        } else if (name === 'address') {
-            setTxtAddress(value)
-            setAddress(value)
-        }
-    };
+      // 파일 용량 체크
+      if (file.size > FILE_SIZE_MAX_LIMIT) {
+        file.value = ''
+        const title: string = '알림'
+        const message: string = '업로드 가능한 최대 용량은 5MB 입니다.'
 
-    const SelectImage = (props: any) => {
-        // const [imageUrl, setImageUrl] = useState<any>(null);
-        // const imageRef = useRef<any>(null);
+        setModalData(title, message, onConfirm)
 
-        const onChangeImage = (e: any) => {
-            const reader = new FileReader();
-            const file = imageRef.current.files[0];
+        return
+      }
 
-            // 파일 확장자 체크
-            if (!fileExtensionValid(file)) {
-                file.value = '';
-                const title:string = '알림';
-                const message:string = `이미지를 업로드 해주세요. [${ALLOW_FILE_EXTENSION}]`;
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        setImageUrl(reader.result)
 
-                setModalData(title, message, onConfirm);
+        setFile({
+          file: e.target.files[0],
+          fileName: e.target.value,
+        })
 
-                return;
-            }
-
-            // 파일 용량 체크
-            if (file.size > FILE_SIZE_MAX_LIMIT) {
-                file.value = '';
-                const title:string = '알림';
-                const message:string = '업로드 가능한 최대 용량은 5MB 입니다.';
-
-                setModalData(title, message, onConfirm);
-
-                return;
-            }
-
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImageUrl(reader.result);
-
-                setFile({
-                    file: e.target.files[0],
-                    fileName: e.target.value,
-                });
-
-                setPhoto(e.target.value)
-            };
-        };
-
-        return (
-            <>
-                <form className="form_photo" encType="multipart/form-data">
-                    <img src={imageUrl ? imageUrl : photo} className="select_img" alt='선택한 이미지'/>
-                    <label htmlFor="file">이미지 업로드</label>
-                    <input
-                        className="btn_img_upload"
-                        type="file"
-                        name="file"
-                        id="file"
-                        accept="image/jpeg, image/png, image/jpg"
-                        ref={imageRef}
-                        onChange={onChangeImage}
-                    />
-                </form>
-            </>
-        );
-    };
-
-    const validCheck = (restaurant: string, address: string, photo: string) => {
-        if (restaurant === '') {
-            const title:string = '알림';
-            const message:string = '식당명을 입력해주세요.';
-
-            setModalData(title, message, onConfirm);
-
-            return false;
-        }
-
-        if (address === '') {
-            const title:string = '알림';
-            const message:string = '식당 위치를 입력해주세요.';
-
-            setModalData(title, message, onConfirm);
-
-            return false;
-        }
-
-        if (photo === '/default_image.png') {
-            const title:string = '알림';
-            const message:string = '식당 이미지를 등록해주세요.';
-
-            setModalData(title, message, onConfirm);
-
-            return false;
-        }
-
-        return true;
-    };
-
-    const post = () => {
-        if (validCheck(restaurant, address, photo)) {
-            const formData = new FormData();
-            const restaurantImg =
-                status == 'create' ? photo : '/photo/' + photo.split('/photo/')[1]
-
-            formData.append('restaurant', restaurant);
-            formData.append('address', address);
-            formData.append('photo', fileInfo.file);
-            formData.append('existingPhoto', restaurantImg);
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data',
-                },
-            };
-
-            if (status === 'create') {
-                Axios.get('/api/existRestaurant', {
-                    params: { restaurant: restaurant }
-                }).then((res) => {
-                    return res.data[0];
-                }).then((data) => {
-                    const count = data.COUNT;
-                    if (count != 0) {
-                        const title:string = '알림';
-                        const message:string = '이미 등록된 음식점입니다.';
-
-                        setModalData(title, message, onConfirm);
-                    } else {
-                        Axios.post('/api/createRestaurant', formData, config)
-                            .then((res) => {
-                                if (res.data != 'undefined') {
-                                    const title:string = '알림';
-                                    const message:string = '음식점 등록 완료';
-
-                                    setModalData(title, message, () => onConfirm('/'));
-                                } else {
-                                    const title:string = '알림';
-                                    const message:string = '동일한 음식점이 등록되어있습니다.';
-
-                                    setModalData(title, message, onConfirm);
-                                }
-                            })
-                            .catch((e) => {
-                                console.error(e);
-                            });
-                    }
-                });
-            } else {
-                Axios.post(`/api/updateRestaurant/${status}`, formData, config)
-                    .then((res) => {
-                        const title:string = '알림';
-                        const message:string = '음식점 수정 완료';
-
-                        setModalData(title, message, () => onConfirm(`/restaurantDetail/${status}`));
-                    })
-                    .catch((e) => {
-                        console.error(e);
-                    });
-            }
-        }
-    };
+        setPhoto(e.target.value)
+      }
+    }
 
     return (
-        <>
-            {modalShow && (
-                <Modal
-                    title={modalInfo.title}
-                    message={modalInfo.message}
-                    onConfirm={modalInfo.onConfirm}
-                />
-            )}
+      <>
+        <form className="form_photo" encType="multipart/form-data">
+          <img src={imageUrl ? imageUrl : photo} className="select_img" alt="선택한 이미지" />
+          <label htmlFor="file">이미지 업로드</label>
+          <input
+            className="btn_img_upload"
+            type="file"
+            name="file"
+            id="file"
+            accept="image/jpeg, image/png, image/jpg"
+            ref={imageRef}
+            onChange={onChangeImage}
+          />
+        </form>
+      </>
+    )
+  }
 
-            {restaurantSearchModalShow && (
-                <RestaurantSearchModal
-                    onConfirm={restaurantSearchModalInfo.onConfirm}
-                    handleRowOnClick={restaurantSearchModalInfo.setRestaurantInfo}
-                />
-            )}
+  const validCheck = (restaurant: string, address: string, photo: string) => {
+    if (restaurant === '') {
+      const title: string = '알림'
+      const message: string = '식당명을 입력해주세요.'
 
-            <div className="App">
-                <div className="area_upload_img">
-                    <SelectImage />
-                </div>
-                <div className="area_restaurant">
-                    <div>
-                        <img src={restaurantIcon} className="img_restaurant" alt='식당'/>
-                    </div>
-                    <form className="form_restaurant">
-                        <input
-                            id="input_restaurant"
-                            className="input_box"
-                            type="text"
-                            name="restaurant"
-                            onChange={handleChange}
-                            placeholder="음식점을 입력하세요"
-                            value={txtRestaurant}
-                            readOnly={restaurantReadOnly}
-                            disabled={restaurantReadOnly}
-                            onClick={() => setRestaurantSearchModalShow(true)}
-                        />
-                    </form>
-                </div>
-                <div className="area_address">
-                    <div>
-                        <img src={addressIcon} className="img_address" alt='주소아이콘'/>
-                    </div>
-                    <form className="form_address">
-                        <input
-                            id="input_address"
-                            className="input_box"
-                            type="text"
-                            name="address"
-                            placeholder="주소를 입력하세요"
-                            value={txtAddress}
-                            onChange={handleChange}
-                        />
-                    </form>
-                </div>
-                <div className="area_btn">
-                    <button
-                        className="btn_restaurant_register"
-                        onClick={post}
-                        id="btn_post"
-                    >
-                        { btnTitle }
-                    </button>
-                </div>
-            </div>
-        </>
-    );
-};
+      setModalData(title, message, onConfirm)
 
-export default PostRestaurant;
+      return false
+    }
+
+    if (address === '') {
+      const title: string = '알림'
+      const message: string = '식당 위치를 입력해주세요.'
+
+      setModalData(title, message, onConfirm)
+
+      return false
+    }
+
+    if (photo === '/default_image.png') {
+      const title: string = '알림'
+      const message: string = '식당 이미지를 등록해주세요.'
+
+      setModalData(title, message, onConfirm)
+
+      return false
+    }
+
+    return true
+  }
+
+  const post = () => {
+    if (validCheck(restaurant, address, photo)) {
+      const formData = new FormData()
+      const restaurantImg = status == 'create' ? photo : '/photo/' + photo.split('/photo/')[1]
+
+      formData.append('restaurant', restaurant)
+      formData.append('address', address)
+      formData.append('photo', fileInfo.file)
+      formData.append('existingPhoto', restaurantImg)
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      }
+
+      if (status === 'create') {
+        Axios.get('/api/existRestaurant', {
+          params: { restaurant: restaurant },
+        })
+          .then((res) => {
+            return res.data[0]
+          })
+          .then((data) => {
+            const count = data.COUNT
+            if (count != 0) {
+              const title: string = '알림'
+              const message: string = '이미 등록된 음식점입니다.'
+
+              setModalData(title, message, onConfirm)
+            } else {
+              Axios.post('/api/createRestaurant', formData, config)
+                .then((res) => {
+                  if (res.data != 'undefined') {
+                    const title: string = '알림'
+                    const message: string = '음식점 등록 완료'
+
+                    setModalData(title, message, () => onConfirm('/'))
+                  } else {
+                    const title: string = '알림'
+                    const message: string = '동일한 음식점이 등록되어있습니다.'
+
+                    setModalData(title, message, onConfirm)
+                  }
+                })
+                .catch((e) => {
+                  console.error(e)
+                })
+            }
+          })
+      } else {
+        Axios.post(`/api/updateRestaurant/${status}`, formData, config)
+          .then((res) => {
+            const title: string = '알림'
+            const message: string = '음식점 수정 완료'
+
+            setModalData(title, message, () => onConfirm(`/restaurantDetail/${status}`))
+          })
+          .catch((e) => {
+            console.error(e)
+          })
+      }
+    }
+  }
+
+  return (
+    <>
+      {modalShow && (
+        <Modal
+          title={modalInfo.title}
+          message={modalInfo.message}
+          onConfirm={modalInfo.onConfirm}
+        />
+      )}
+
+      {restaurantSearchModalShow && (
+        <RestaurantSearchModal
+          onConfirm={restaurantSearchModalInfo.onConfirm}
+          handleRowOnClick={restaurantSearchModalInfo.setRestaurantInfo}
+        />
+      )}
+
+      <div className="App">
+        <div className="area_upload_img">{<SelectImage />}</div>
+        <div className="area_restaurant">
+          <div>
+            <img src={restaurantIcon} className="img_restaurant" alt="식당" />
+          </div>
+          <form className="form_restaurant">
+            <input
+              id="input_restaurant"
+              className="input_box"
+              type="text"
+              name="restaurant"
+              onChange={handleChange}
+              placeholder="음식점을 입력하세요"
+              value={txtRestaurant}
+              readOnly={restaurantReadOnly}
+              disabled={restaurantReadOnly}
+              onClick={() => {
+                setRestaurantSearchModalShow(true)
+              }}
+            />
+          </form>
+        </div>
+        <div className="area_address">
+          <div>
+            <img src={addressIcon} className="img_address" alt="주소아이콘" />
+          </div>
+          <form className="form_address">
+            <input
+              id="input_address"
+              className="input_box"
+              type="text"
+              name="address"
+              placeholder="주소를 입력하세요"
+              value={txtAddress}
+              onChange={handleChange}
+            />
+          </form>
+        </div>
+        <div className="area_btn">
+          <button className="btn_restaurant_register" onClick={post} id="btn_post">
+            {btnTitle}
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default PostRestaurant

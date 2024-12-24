@@ -1,12 +1,27 @@
 # 🌝맛점몇점<br>
 ## How to start
-1. frontend<br>
+1. make `.env`
+```bash
+REACT_APP_HOME_URL=http://localhost:8000
+
+REACT_APP_DB_HOST=localhost || your ip
+REACT_APP_DB_USER=user_name
+REACT_APP_DB_PW=user_pw
+REACT_APP_DB_SCHEMA=schema_name
+REACT_APP_DB_PORT=port
+
+REACT_APP_MODE=mode
+
+NAVER_SEARCH_API_ID=naver_search_api_id
+NAVER_SEARCH_API_SECRET=naver_search_api_secret
+```
+2. frontend<br>
 `npm run frontend`
-2. backend<br>
+3. backend<br>
 `npm run backend`
-3. open browser<br>
+4. open browser<br>
 `http://localhost:3000`
-4. <span style="color:#979797;">~~come visit me~~</span><br>
+5<span style="color:#979797;">~~come visit me~~</span><br>
 ~~`https://some-tastes-1sunny.koyeb.app/`~~
 <!-- <a href="https://some-tastes-1sunny.koyeb.app/">
   `https://some-tastes-1sunny.koyeb.app/`
