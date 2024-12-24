@@ -21,7 +21,7 @@ NAVER_SEARCH_API_SECRET=naver_search_api_secret
 `npm run backend`
 4. open browser<br>
 `http://localhost:3000`
-5<span style="color:#979797;">~~come visit me~~</span><br>
+5. <span style="color:#979797;">~~come visit me~~</span><br>
 ~~`https://some-tastes-1sunny.koyeb.app/`~~
 <!-- <a href="https://some-tastes-1sunny.koyeb.app/">
   `https://some-tastes-1sunny.koyeb.app/`
