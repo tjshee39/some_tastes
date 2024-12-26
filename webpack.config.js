@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin') // 플러그인
+const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const dotenv = require('dotenv-webpack')
 const path = require('path') // 해당 파일의 경로
 
@@ -35,8 +36,13 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         // 제외 대상
         exclude: /node_modules/,
-        // 사용할 loader
-        loader: 'babel-loader',
+        use: {
+          // 사용할 loader
+          loader: 'babel-loader',
+          options: {
+            plugins: ['react-refresh/babel'],
+          },
+        },
       },
       {
         test: /\.css$/,
@@ -64,6 +70,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: 'process/browser.js',
     }),
+    new RefreshWebpackPlugin(),
     new dotenv(),
   ],
   resolve: {

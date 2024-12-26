@@ -365,6 +365,7 @@ const PostRestaurant = () => {
               name="address"
               placeholder="주소를 입력하세요"
               value={txtAddress}
+              readOnly={true}
               onChange={handleChange}
             />
           </form>

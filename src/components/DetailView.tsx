@@ -6,7 +6,7 @@ import '../css/detailView.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import addressLocation from '../assets/images/location.png'
 import CreateReview from '../components/CreateReview'
-import RivewList from './ReviewList'
+import ReviewList from './ReviewList'
 import ReviewChart from './ReviewChart'
 import Modal from '../components/common/Modal'
 
@@ -46,10 +46,11 @@ const DetailView = () => {
     photo: '',
   })
 
-  const { bno } = useParams()
+  const { bno } = useParams() as { bno: string }
+  const intBno = parseInt(bno, 10)
 
   const getRestaurantDetail = () => {
-    Axios.get(`/api/restaurantDetail/${bno}`)
+    Axios.get(`/api/restaurantDetail/${intBno}`)
       .then((res) => {
         res.data[0].photo = REACT_APP_HOME_URL + res.data[0].photo
         return res.data
@@ -116,13 +117,13 @@ const DetailView = () => {
           </div>
         </div>
         <div className="area_createReview">
-          <CreateReview key={bno} bno={bno} />
+          <CreateReview key={intBno} bno={intBno} />
         </div>
         <div>
-          <ReviewChart key={bno} bno={bno} />
+          <ReviewChart key={intBno} bno={intBno} />
         </div>
         <div className="area_reviews">
-          <RivewList key={bno} bno={bno} />
+          <ReviewList key={intBno} bno={intBno} />
         </div>
       </div>
     </>

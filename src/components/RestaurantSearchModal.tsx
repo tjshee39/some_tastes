@@ -66,17 +66,15 @@ const RestaurantSearchModalOverlay = (props: ModalInfo) => {
   const [selectedSubArea, setSelectedSubArea] = useState<string>('')
 
   const handleChangeArea = (value: string) => {
+    const subAreaList = sigunguList.find((area) => area.name === value)?.subArea || []
+    setSubAreaList(subAreaList)
+
     if (value !== '전체') {
       setSelectedArea(value)
     } else {
       setSelectedArea('')
-      setSelectedSubArea('')
+      setSelectedSubArea('전체')
     }
-    setSelectedArea(value !== '전체' ? value : '')
-
-    const subAreaList = sigunguList.find((area) => area.name === value)?.subArea || []
-
-    setSubAreaList(subAreaList)
   }
 
   const handleChangeSubArea = (value: string) => {
